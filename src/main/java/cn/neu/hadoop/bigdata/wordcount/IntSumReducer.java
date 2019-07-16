@@ -1,4 +1,4 @@
-package cn.neu.hadoop.bigdata;
+package cn.neu.hadoop.bigdata.wordcount;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;

@@ -21,11 +21,12 @@ public class HadoopTemplateTest {
 
     @Test
     public void uploadFile() {
-        hadoopTemplate.uploadFile("C:\\test.txt", "/test");
+        hadoopTemplate.uploadFile("C:\\test.txt", "/test/");
     }
 
     @Test
     public void uploadFile1() {
+
     }
 
     @Test
@@ -63,7 +64,7 @@ public class HadoopTemplateTest {
         Map<String, String> map = new HashMap<>();
         map.put("name", "zhangsan");
         map.put("class", "dayi");
-        hadoopTemplate.writeSequenceFile("/test/111.txt",map);
+        hadoopTemplate.writeSequenceFile("/test/111.txt", map);
     }
 
     @Test
@@ -77,7 +78,7 @@ public class HadoopTemplateTest {
         map.put("class1", "dayi");
         map.put("name1", "zhangsan");
 
-        hadoopTemplate.writeMapFile("/test",map);
+        hadoopTemplate.writeMapFile("/test", map);
     }
 
     @Test
