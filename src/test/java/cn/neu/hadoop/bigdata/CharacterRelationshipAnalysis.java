@@ -26,10 +26,12 @@ public class CharacterRelationshipAnalysis {
         int cur_mission = 0;
         String source_data_path = "C:\\tem\\data";
         String input_path = namespace + "/input/";
-        hadoopTemplate.uploadDir(source_data_path, input_path);
+        String output_path_format = namespace + "output";
+        //hadoopTemplate.uploadDir(source_data_path, input_path);
 
         try {
-            nameSplit.main();
+            nameSplit.main(input_path, output_path_format + cur_mission);
+            cur_mission++;
         } catch (Exception e) {
             e.printStackTrace();
             assert false;

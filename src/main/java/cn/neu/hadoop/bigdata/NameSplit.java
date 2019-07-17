@@ -17,13 +17,12 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
 
-@Configuration
+@Component
 @Slf4j
 public class NameSplit {
     @Autowired
@@ -35,19 +34,6 @@ public class NameSplit {
 
     private String input_path = "/test/input";
     private String output_path = "/test/output1";
-
-    @Bean("namesplit")
-    public NameSplit get_namesplit() {
-        return new NameSplit();
-    }
-
-    NameSplit() {
-    }
-
-    NameSplit(String in_path, String out_path) {
-        this.input_path = in_path;
-        this.output_path = out_path;
-    }
 
     public static class NameLineMapper extends Mapper<Object, Text, LongWritable, Text> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -94,5 +80,11 @@ public class NameSplit {
         FileInputFormat.addInputPath(job, in);
         FileOutputFormat.setOutputPath(job, out);
         job.waitForCompletion(true);
+    }
+
+    public void main(String in_path, String out_path) throws IOException, InterruptedException, ClassNotFoundException {
+        this.input_path = in_path;
+        this.output_path = out_path;
+        this.main();
     }
 }
