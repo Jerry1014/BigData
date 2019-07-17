@@ -46,9 +46,10 @@ public class CharacterRelationshipAnalysis {
 //            BuildRelationshipMap.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, name_node);
 //            cur_mission++;
 
-            clear_output_directory(output_path_format + cur_mission);
-            clear_output_directory(namespace + "/tmp");
-            PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 1, name_node);
+            // 两种不同的人物关系计算方法
+//            clear_output_directory(output_path_format + cur_mission);
+//            clear_output_directory(namespace + "/tmp");
+//            PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 1, name_node);
             cur_mission++;
             hadoopTemplate.read(output_path_format + (cur_mission - 1) + "/part-r-00000");
         } catch (Exception e) {
