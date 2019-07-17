@@ -17,7 +17,7 @@ import java.io.IOException;
 @Slf4j
 public class NameCount {
     private static String input_path = "/test/input";
-    private static String output_path = "/test/output1";
+    private static String output_path = "/test/output2";
 
     public static class NameCountMapper extends Mapper<Object, Text, Text, IntWritable> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
