@@ -8,7 +8,10 @@
        - 人名提取 NameSplit （基于Ansj_seg）
        - 人物同现统计 NameCount （不对关系做过多分析，认为同一段落的人物即存在关系）
        - 人物关系图构建 BuildRelationshipMap
-       - todo 基于人物关系图的PageRank计算
+       - 基于人物关系图的PageRank计算
+            - PR值初始化 GraphBuilder
+            - 迭代计算PR值 PageRankIter
+            - 对PR值进行排序 PageRankViewer
        - todo 基于人物关系图的标签传播
        - todo 数据可视化
    - todo 可视化结果

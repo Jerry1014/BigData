@@ -14,12 +14,12 @@ import java.io.IOException;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Slf4j
 public class CharacterRelationshipAnalysis {
+    @Value("${hadoop.name-node}")
+    private String name_node;
     @Autowired
     private HadoopTemplate hadoopTemplate;
     @Value("${hadoop.namespace:/}")
     private String namespace;
-    @Value("${hadoop.name-node}")
-    private String name_node;
 
 
     @Test
@@ -27,25 +27,29 @@ public class CharacterRelationshipAnalysis {
         // 任务初始化
         int cur_mission = 0;
         String source_data_path = "C:\\tem\\data";
-        String input_path = name_node + namespace + "/input";
-        String output_path_format = name_node + namespace + "/output";
+        String input_path = namespace + "/input";
+        String output_path_format = namespace + "/output";
 
         try {
             cur_mission = 4;
 
-            //clear_output_directory(input_path);
-            //hadoopTemplate.uploadDir(source_data_path, input_path);
+//            clear_output_directory(input_path);
+//            hadoopTemplate.uploadDir(source_data_path, input_path);
 //            cur_mission++;
 //            clear_output_directory(output_path_format + cur_mission);
-//            NameSplit.main(input_path, output_path_format + cur_mission);
+//            NameSplit.main(input_path, output_path_format + cur_mission, name_node);
 //            cur_mission++;
 //            clear_output_directory(output_path_format + cur_mission);
-//            NameCount.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission);
+//            NameCount.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, name_node);
 //            cur_mission++;
 //            clear_output_directory(output_path_format + cur_mission);
-//            BuildRelationshipMap.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission);
+//            BuildRelationshipMap.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, name_node);
 //            cur_mission++;
 
+            clear_output_directory(output_path_format + cur_mission);
+            clear_output_directory(namespace + "/tmp");
+            PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 1, name_node);
+            cur_mission++;
             hadoopTemplate.read(output_path_format + (cur_mission - 1) + "/part-r-00000");
         } catch (Exception e) {
             e.printStackTrace();

@@ -51,7 +51,7 @@ public class NameSplit {
         }
     }
 
-    public static void main() throws IOException, InterruptedException, ClassNotFoundException {
+    public static void main(String name_node) throws IOException, InterruptedException, ClassNotFoundException {
         Job job = Job.getInstance();
         job.setJarByClass(NameSplit.class);
         job.setMapperClass(NameLineMapper.class);
@@ -59,14 +59,14 @@ public class NameSplit {
         job.setOutputKeyClass(LongWritable.class);
         job.setOutputValueClass(Text.class);
         job.setNumReduceTasks(1);//设置reduce的个数
-        FileInputFormat.addInputPath(job, new Path(input_path));
-        FileOutputFormat.setOutputPath(job, new Path(output_path));
+        FileInputFormat.addInputPath(job, new Path(name_node + input_path));
+        FileOutputFormat.setOutputPath(job, new Path(name_node + output_path));
         job.waitForCompletion(true);
     }
 
-    public static void main(String in_path, String out_path) throws IOException, InterruptedException, ClassNotFoundException {
+    public static void main(String in_path, String out_path, String name_node) throws IOException, InterruptedException, ClassNotFoundException {
         input_path = in_path;
         output_path = out_path;
-        main();
+        main(name_node);
     }
 }

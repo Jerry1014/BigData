@@ -65,6 +65,9 @@ public class HadoopTemplate {
 
     public void uploadDir(String srcPath, String destPath) {
         try {
+            if (!destPath.endsWith("/")) {
+                destPath += '/';
+            }
             for (File file_name : Objects.requireNonNull(new File(srcPath).listFiles())) {
                 this.uploadFile(file_name.toString(), destPath + file_name.getName());
             }

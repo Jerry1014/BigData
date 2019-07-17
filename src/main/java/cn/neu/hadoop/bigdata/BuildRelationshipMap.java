@@ -39,13 +39,17 @@ public class BuildRelationshipMap {
                 relationship_count.put(name_count[0], count);
                 sum += count;
             }
+            StringBuilder sb = new StringBuilder();
             for (Map.Entry<String, Integer> i : relationship_count.entrySet()) {
-                context.write(key, new Text(i.getKey() + ':' + (float)i.getValue() / sum));
+                sb.append(i.getKey()).append(':').append((float) i.getValue() / sum);
+                sb.append(';');
             }
+            String result = sb.toString();
+            context.write(key, new Text(result.substring(0, result.length() - 1)));
         }
     }
 
-    public static void main() throws IOException, InterruptedException, ClassNotFoundException {
+    public static void main(String name_node) throws IOException, InterruptedException, ClassNotFoundException {
         Job job = Job.getInstance();
         job.setJarByClass(BuildRelationshipMap.class);
         job.setMapperClass(NameMapper.class);
@@ -53,14 +57,14 @@ public class BuildRelationshipMap {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         job.setNumReduceTasks(1);
-        FileInputFormat.addInputPath(job, new Path(input_path));
-        FileOutputFormat.setOutputPath(job, new Path(output_path));
+        FileInputFormat.addInputPath(job, new Path(name_node + input_path));
+        FileOutputFormat.setOutputPath(job, new Path(name_node + output_path));
         job.waitForCompletion(true);
     }
 
-    public static void main(String in_path, String out_path) throws IOException, InterruptedException, ClassNotFoundException {
+    public static void main(String in_path, String out_path, String name_node) throws IOException, InterruptedException, ClassNotFoundException {
         input_path = in_path;
         output_path = out_path;
-        main();
+        main(name_node);
     }
 }
