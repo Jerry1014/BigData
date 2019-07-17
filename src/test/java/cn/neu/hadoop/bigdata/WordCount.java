@@ -92,7 +92,7 @@ public class WordCount {
         job.setNumReduceTasks(1);//设置reduce的个数
 
         //本次job作业要处理的原始数据所在的路径
-        FileInputFormat.addInputPath(job, new Path(nameNode + inputPath));
+        FileInputFormat.addInputPath(job, in);
         //本次job作业产生的结果输出路径
         FileOutputFormat.setOutputPath(job, out);
 

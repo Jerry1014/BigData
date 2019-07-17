@@ -14,12 +14,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 // 泛指各种组件
@@ -49,6 +47,18 @@ public class HadoopTemplate {
 
     public void uploadFile(String srcFile, String destPath) {
         copyFileToHDFS(false, true, srcFile, destPath);
+    }
+
+    public void uploadDir(String srcPath, String destPath) {
+        try {
+            if (fileSystem.exists(new Path(srcPath)))
+                this.delDir(srcPath);
+            for (File file_name : Objects.requireNonNull(new File(srcPath).listFiles())) {
+                this.uploadFile(srcPath + file_name.toString(), destPath);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void delFile(String fileName) {

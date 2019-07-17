@@ -30,6 +30,12 @@ public class HadoopTemplateTest {
     }
 
     @Test
+    public void uploadDir(){
+        hadoopTemplate.uploadDir("./data/金庸/", "/test/input");
+        assert hadoopTemplate.existDir("/test/input", false);
+    }
+
+    @Test
     public void delFile() {
     }
 
