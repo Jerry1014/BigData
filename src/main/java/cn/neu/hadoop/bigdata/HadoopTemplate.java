@@ -138,7 +138,7 @@ public class HadoopTemplate {
 
 
     /**
-     * 删除文件或者文件目录
+     * 删除文件或者文件目录，当filename为""时，为删除目录
      *
      * @param path 路径
      */
