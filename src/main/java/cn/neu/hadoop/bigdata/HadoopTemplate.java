@@ -269,17 +269,18 @@ public class HadoopTemplate {
     /**
      * 读取hdfs文件
      *
-     * @param fileName 要读取的hdfs文件路径
+     * @param fileName  要读取的hdfs文件路径
+     * @param if_return 选择输出到屏幕或是返回str
      * @return 文件内容str
      * @throws Exception 打开文件的IOException
      */
-    public String read(String fileName) throws Exception {
+    public String read(boolean if_return, String fileName) throws Exception {
         Path path = new Path(fileName);
         FSDataInputStream inStream = fileSystem.open(path);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
-            IOUtils.copyBytes(inStream, System.out, 4096, false);
-            IOUtils.copyBytes(inStream, byteArrayOutputStream, 4096, false);
+            if (if_return) IOUtils.copyBytes(inStream, byteArrayOutputStream, 4096, false);
+            else IOUtils.copyBytes(inStream, System.out, 4096, false);
         } catch (Exception e) {
             e.printStackTrace();
         }

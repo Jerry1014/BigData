@@ -100,7 +100,7 @@ public class WordCount {
         job.waitForCompletion(true);
 
         try {
-            hadoopTemplate.read(outputPath + "/part-r-00000");
+            hadoopTemplate.read(false, outputPath + "/part-r-00000");
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
