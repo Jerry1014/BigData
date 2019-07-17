@@ -20,7 +20,7 @@ public class HadoopTemplateTest {
 
     @Test
     public void uploadFile() {
-        hadoopTemplate.uploadFile("C:\\tem\\test.txt", "/test/");
+        hadoopTemplate.uploadFile("C:\\tem\\jinyong_all_person.txt", "/test/userdic");
     }
 
     @Test
@@ -92,7 +92,7 @@ public class HadoopTemplateTest {
 
     @Test
     public void read() throws Exception {
-        hadoopTemplate.read("/test/555.txt");
+        hadoopTemplate.read(false, "/test/userdic/jinyong_all_person.txt");
     }
 
     @Test
