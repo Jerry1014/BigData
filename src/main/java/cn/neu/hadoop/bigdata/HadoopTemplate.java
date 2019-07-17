@@ -41,13 +41,22 @@ public class HadoopTemplate {
         this.existDir(nameSpace, true);
     }
 
+    public boolean exists(String path) throws IOException {
+        return fileSystem.exists(new Path(path));
+    }
+
+    public boolean exists(Path path) throws IOException {
+        return fileSystem.exists(path);
+    }
+
     public void uploadFile(String srcFile) {
         copyFileToHDFS(false, true, srcFile, nameSpace);
     }
 
     /**
      * 上传文件到hdfs
-     * @param srcFile 源文件路径
+     *
+     * @param srcFile  源文件路径
      * @param destPath hdfs的文件路径
      */
     public void uploadFile(String srcFile, String destPath) {

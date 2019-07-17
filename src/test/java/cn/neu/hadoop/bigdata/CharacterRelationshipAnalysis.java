@@ -1,8 +1,6 @@
 package cn.neu.hadoop.bigdata;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +14,6 @@ import java.io.IOException;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Slf4j
 public class CharacterRelationshipAnalysis {
-    @Autowired
-    private FileSystem fileSystem;
     @Autowired
     private HadoopTemplate hadoopTemplate;
     @Value("${hadoop.namespace:/}")
@@ -50,7 +46,7 @@ public class CharacterRelationshipAnalysis {
 //            BuildRelationshipMap.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission);
 //            cur_mission++;
 
-            hadoopTemplate.read(output_path_format+(cur_mission-1)+"/part-r-00000");
+            hadoopTemplate.read(output_path_format + (cur_mission - 1) + "/part-r-00000");
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
@@ -58,9 +54,8 @@ public class CharacterRelationshipAnalysis {
     }
 
     public void clear_output_directory(String path) throws IOException {
-        Path out = new Path(path);
-        if (fileSystem.exists(out)) {
-            fileSystem.delete(out, true);//true的意思是，就算output里面有东西，也一带删除
+        if (hadoopTemplate.exists(path)) {
+            hadoopTemplate.delDir(path);//true的意思是，就算output里面有东西，也一带删除
         }
     }
 }
