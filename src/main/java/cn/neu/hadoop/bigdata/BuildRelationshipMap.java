@@ -40,7 +40,7 @@ public class BuildRelationshipMap {
                 sum += count;
             }
             for (Map.Entry<String, Integer> i : relationship_count.entrySet()) {
-                context.write(key, new Text(i.getKey() + ':' + String.valueOf(i.getValue() / sum)));
+                context.write(key, new Text(i.getKey() + ':' + (float)i.getValue() / sum));
             }
         }
     }

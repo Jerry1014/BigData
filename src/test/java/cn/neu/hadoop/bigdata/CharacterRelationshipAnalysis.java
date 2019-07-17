@@ -18,6 +18,8 @@ import java.io.IOException;
 public class CharacterRelationshipAnalysis {
     @Autowired
     private FileSystem fileSystem;
+    @Autowired
+    private HadoopTemplate hadoopTemplate;
     @Value("${hadoop.namespace:/}")
     private String namespace;
     @Value("${hadoop.name-node}")
@@ -33,15 +35,22 @@ public class CharacterRelationshipAnalysis {
         String output_path_format = name_node + namespace + "/output";
 
         try {
+            cur_mission = 4;
+
             //clear_output_directory(input_path);
             //hadoopTemplate.uploadDir(source_data_path, input_path);
-            cur_mission++;
-            clear_output_directory(output_path_format + cur_mission);
-            NameSplit.main(input_path, output_path_format + cur_mission);
-            cur_mission++;
-            clear_output_directory(output_path_format + cur_mission);
-            NameCount.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission);
-            cur_mission++;
+//            cur_mission++;
+//            clear_output_directory(output_path_format + cur_mission);
+//            NameSplit.main(input_path, output_path_format + cur_mission);
+//            cur_mission++;
+//            clear_output_directory(output_path_format + cur_mission);
+//            NameCount.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission);
+//            cur_mission++;
+//            clear_output_directory(output_path_format + cur_mission);
+//            BuildRelationshipMap.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission);
+//            cur_mission++;
+
+            hadoopTemplate.read(output_path_format+(cur_mission-1)+"/part-r-00000");
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
