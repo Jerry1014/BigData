@@ -18,10 +18,9 @@ public class HadoopTemplateTest {
     @Autowired
     private HadoopTemplate hadoopTemplate;
 
-
     @Test
     public void uploadFile() {
-        hadoopTemplate.uploadFile("C:\\test.txt", "/test/");
+        hadoopTemplate.uploadFile("C:\\tem\\test.txt", "/test/");
     }
 
     @Test
@@ -30,9 +29,8 @@ public class HadoopTemplateTest {
     }
 
     @Test
-    public void uploadDir(){
-        hadoopTemplate.uploadDir("./data/金庸/", "/test/input");
-        assert hadoopTemplate.existDir("/test/input", false);
+    public void uploadDir() {
+        hadoopTemplate.uploadDir("C:\\tem\\data", "/test/input/");
     }
 
     @Test

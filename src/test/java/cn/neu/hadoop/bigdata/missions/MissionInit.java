@@ -17,6 +17,6 @@ public class MissionInit {
 
     @Test
     public void uploadFile() {
-        hadoopTemplate.uploadDir("./data/金庸/", "/test/input");
+        hadoopTemplate.uploadDir("C:\\tem\\data", "/test/input/");
     }
  }

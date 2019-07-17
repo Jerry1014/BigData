@@ -31,8 +31,8 @@ public class NameSplit {
     @Autowired
     HadoopTemplate hadoopTemplate;
 
-    private String input_path = "/test/inputs";
-    private String output_path = "/test/outputs";
+    private String input_path = "/test/input";
+    private String output_path = "/test/output1";
 
     @Test
     public void name_split() throws IOException, InterruptedException, ClassNotFoundException {

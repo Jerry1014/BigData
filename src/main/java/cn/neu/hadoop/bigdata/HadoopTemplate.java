@@ -45,16 +45,19 @@ public class HadoopTemplate {
         copyFileToHDFS(false, true, srcFile, nameSpace);
     }
 
+    /**
+     * 上传文件到hdfs
+     * @param srcFile 源文件路径
+     * @param destPath hdfs的文件路径
+     */
     public void uploadFile(String srcFile, String destPath) {
         copyFileToHDFS(false, true, srcFile, destPath);
     }
 
     public void uploadDir(String srcPath, String destPath) {
         try {
-            if (fileSystem.exists(new Path(srcPath)))
-                this.delDir(srcPath);
             for (File file_name : Objects.requireNonNull(new File(srcPath).listFiles())) {
-                this.uploadFile(srcPath + file_name.toString(), destPath);
+                this.uploadFile(file_name.toString(), destPath + file_name.getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
