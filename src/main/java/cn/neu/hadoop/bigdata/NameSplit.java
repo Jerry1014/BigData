@@ -25,15 +25,8 @@ import java.util.List;
 @Component
 @Slf4j
 public class NameSplit {
-    @Autowired
-    FileSystem fileSystem;
-    @Value("${hadoop.name-node}")
-    private String nameNode;
-    @Autowired
-    HadoopTemplate hadoopTemplate;
-
-    private String input_path = "/test/input";
-    private String output_path = "/test/output1";
+    private static String input_path = "/test/input";
+    private static String output_path = "/test/output1";
 
     public static class NameLineMapper extends Mapper<Object, Text, LongWritable, Text> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -61,15 +54,7 @@ public class NameSplit {
         }
     }
 
-    public void main() throws IOException, InterruptedException, ClassNotFoundException {
-        //判断output文件夹是否存在，如果存在则删除
-        Path in = new Path(nameNode + input_path);
-        Path out = new Path(nameNode + output_path);
-        assert fileSystem.exists(in);
-        if (fileSystem.exists(out)) {
-            fileSystem.delete(out, true);//true的意思是，就算output里面有东西，也一带删除
-        }
-
+    public static void main() throws IOException, InterruptedException, ClassNotFoundException {
         Job job = Job.getInstance();
         job.setJarByClass(NameSplit.class);
         job.setMapperClass(NameLineMapper.class);
@@ -77,14 +62,14 @@ public class NameSplit {
         job.setOutputKeyClass(LongWritable.class);
         job.setOutputValueClass(Text.class);
         job.setNumReduceTasks(1);//设置reduce的个数
-        FileInputFormat.addInputPath(job, in);
-        FileOutputFormat.setOutputPath(job, out);
+        FileInputFormat.addInputPath(job, new Path(input_path));
+        FileOutputFormat.setOutputPath(job, new Path(output_path));
         job.waitForCompletion(true);
     }
 
-    public void main(String in_path, String out_path) throws IOException, InterruptedException, ClassNotFoundException {
-        this.input_path = in_path;
-        this.output_path = out_path;
-        this.main();
+    public static void main(String in_path, String out_path) throws IOException, InterruptedException, ClassNotFoundException {
+        input_path = in_path;
+        output_path = out_path;
+        main();
     }
 }

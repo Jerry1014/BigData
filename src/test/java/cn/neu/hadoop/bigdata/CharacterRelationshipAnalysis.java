@@ -17,9 +17,6 @@ public class CharacterRelationshipAnalysis {
     @Value("${hadoop.namespace:/}")
     private String namespace;
 
-    @Autowired
-    private NameSplit nameSplit;
-
     @Test
     public void all_mission_test() {
         // 任务初始化
@@ -30,7 +27,9 @@ public class CharacterRelationshipAnalysis {
         //hadoopTemplate.uploadDir(source_data_path, input_path);
 
         try {
-            nameSplit.main(input_path, output_path_format + cur_mission);
+            NameSplit.main(input_path, output_path_format + cur_mission);
+            cur_mission++;
+            NameCount.main(input_path, output_path_format + cur_mission);
             cur_mission++;
         } catch (Exception e) {
             e.printStackTrace();
