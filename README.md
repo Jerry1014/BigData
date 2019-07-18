@@ -12,7 +12,10 @@
             - PR值初始化 GraphBuilder
             - 迭代计算PR值 PageRankIter
             - 对PR值进行排序 PageRankViewer
-       - todo 基于人物关系图的标签传播
+       - 基于人物关系图的标签传播
+            - 标签初始化 LPAInit
+            - 迭代更新标签 LPAIteration
+            - 按标签进行分区，并根据PR值进行排序 LPAReorganize
        - todo 数据可视化
    - todo 可视化结果
    - 其他
