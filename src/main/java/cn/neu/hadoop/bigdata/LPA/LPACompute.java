@@ -100,11 +100,14 @@ public class LPACompute {
             FileOutputFormat.setOutputPath(job, new Path(name_node + tmp_output_path + tmp_count));
             job.waitForCompletion(true);
 
-            LPAClassificationViewer.main(name_node + tmp_output_path + tmp_count, name_node + tmp_output_path + tmp_count + "_v");
             repeat_time--;
             tmp_count++;
         }
-        LPAReorganize.main(name_node + tmp_output_path + (tmp_count - 1), name_node + output_path);
+        // 对lpa结果做聚类
+        int num_cluster = LPAResultClustering.main(name_node + tmp_output_path + (tmp_count - 1), name_node + tmp_output_path + tmp_count);
+        tmp_count++;
+        // 对聚类后的结果进行分离
+        LPAReorganize.main(name_node + tmp_output_path + (tmp_count - 1), name_node + output_path, num_cluster);
     }
 
     public static void main(String in_path, String out_path, int repeat_time, String name_node) throws IOException, InterruptedException, ClassNotFoundException {

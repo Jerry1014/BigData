@@ -16,20 +16,22 @@ import java.util.HashMap;
 
 @Component
 @Slf4j
-public class LPAClassificationViewer {
+public class LPAResultClustering {
+    private static int label_no;
+
     public static class LPAViewerMapper extends Mapper<Object, Text, IntWritable, Text> {
         HashMap<String, Integer> appear_label = new HashMap<>();
-        int label_no = 0;
 
         public void map(Object key, Text values, Context context) throws IOException, InterruptedException {
             String[] key_value = values.toString().split("\t");
             String[] name_label = key_value[0].split("#");
+            float PR = Float.valueOf(key_value[1].split("#")[0]);
 
             if (appear_label.containsKey(name_label[1]))
-                context.write(new IntWritable(appear_label.get(name_label[1])), new Text(name_label[0]));
+                context.write(new IntWritable(appear_label.get(name_label[1])), new Text(name_label[0] + '#' + PR));
             else {
                 appear_label.put(name_label[1], label_no);
-                context.write(new IntWritable(label_no), new Text(name_label[0]));
+                context.write(new IntWritable(label_no), new Text(name_label[0] + '#' + PR));
                 label_no++;
             }
         }
@@ -43,9 +45,10 @@ public class LPAClassificationViewer {
         }
     }
 
-    public static void main(String input_path, String output_path) throws IOException, ClassNotFoundException, InterruptedException {
+    public static int main(String input_path, String output_path) throws IOException, ClassNotFoundException, InterruptedException {
+        label_no = 0;
         Job job = Job.getInstance();
-        job.setJarByClass(LPAClassificationViewer.class);
+        job.setJarByClass(LPAResultClustering.class);
         job.setMapperClass(LPAViewerMapper.class);
         job.setReducerClass(LPAViewerReduce.class);
         job.setOutputKeyClass(IntWritable.class);
@@ -53,5 +56,7 @@ public class LPAClassificationViewer {
         FileInputFormat.addInputPath(job, new Path(input_path));
         FileOutputFormat.setOutputPath(job, new Path(output_path));
         job.waitForCompletion(true);
+
+        return label_no;
     }
 }

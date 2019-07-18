@@ -1,6 +1,6 @@
 package cn.neu.hadoop.bigdata.LPA;
 
-import cn.neu.hadoop.bigdata.UserDefinedDataTypes.DesFloatWritable;
+import cn.neu.hadoop.bigdata.userdefineddatatypes.DesFloatWritable;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -19,38 +19,29 @@ import java.util.HashMap;
 @Slf4j
 public class LPAReorganize {
     public static class LPAReorganizeMapper extends Mapper<Object, Text, DesFloatWritable, Text> {
-        static HashMap<String, Integer> label_label_no = new HashMap<>();
-        static int next_no = 0;
-
         public void map(Object key, Text values, Context context) throws IOException, InterruptedException {
-            String[] key_value = values.toString().split("\t");
-            float PR = Float.valueOf(key_value[1].split("#")[0]);
-            String[] name_label = key_value[0].split("#");
+            String[] label_and_name_pr = values.toString().split("\t");
+            String[] name_and_pr = label_and_name_pr[1].split("#");
+            float PR = Float.valueOf(name_and_pr[1]);
 
-            int this_label;
-            if (label_label_no.containsKey(name_label[1])) this_label = label_label_no.get(name_label[1]);
-            else {
-                label_label_no.put(name_label[1], next_no);
-                this_label = next_no;
-                next_no++;
-            }
-            context.write(new DesFloatWritable(PR), new Text(name_label[0] + '#' + next_no));
-//            context.write(new DesFloatWritable(PR), new Text(name_label[0]));
+            context.write(new DesFloatWritable(PR), new Text(label_and_name_pr[0] + '#' + name_and_pr[0]));
         }
     }
 
     public static class LPAReorganizePartitioner extends Partitioner<DesFloatWritable, Text> {
         HashMap<String, Integer> label_label_no = new HashMap<>();
-        static int next_no = 0;
+        int next_no = 0;
 
         @Override
         public int getPartition(DesFloatWritable desFloatWritable, Text text, int i) {
-//            String[] name_label = text.toString().split("#");
-            String[] name_label = {"",text.toString()};
-            if (label_label_no.containsKey(name_label[1])) {
-                return label_label_no.get(name_label[1]);
+            if(label_label_no.size()%10==0){
+                log.error("卧槽");
+            }
+            String[] label_name = text.toString().split("#");
+            if (label_label_no.containsKey(label_name[0])) {
+                return label_label_no.get(label_name[0]);
             } else {
-                label_label_no.put(name_label[1], next_no);
+                label_label_no.put(label_name[0], next_no);
                 next_no++;
                 return next_no - 1;
             }
@@ -60,12 +51,13 @@ public class LPAReorganize {
     public static class LPAReorganizeReduce extends Reducer<DesFloatWritable, Text, DesFloatWritable, Text> {
         public void reduce(DesFloatWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             for (Text i : values) {
-                context.write(key, i);
+                String[] label_name = i.toString().split("#");
+                context.write(key, new Text(label_name[1]));
             }
         }
     }
 
-    public static void main(String input_path, String output_path) throws IOException, ClassNotFoundException, InterruptedException {
+    public static void main(String input_path, String output_path, int num_cluster) throws IOException, ClassNotFoundException, InterruptedException {
         Job job = Job.getInstance();
         job.setJarByClass(LPAReorganize.class);
         job.setMapperClass(LPAReorganizeMapper.class);
@@ -75,7 +67,8 @@ public class LPAReorganize {
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(input_path));
         FileOutputFormat.setOutputPath(job, new Path(output_path));
-//        job.setNumReduceTasks(300);
+        job.setNumReduceTasks(num_cluster);
+//        job.setNumReduceTasks(500);
         job.waitForCompletion(true);
     }
 }
