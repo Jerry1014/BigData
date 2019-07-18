@@ -65,7 +65,7 @@ public class CharacterRelationshipAnalysis {
 
             clear_output_directory(output_path_format + cur_mission);
             clear_output_directory(namespace + "/tmp/lpa");
-            LPACompute.main(pagerank_output_path, output_path_format + cur_mission, 10, name_node);
+            LPACompute.main(pagerank_output_path, output_path_format + cur_mission, 6, name_node);
 //            clear_output_directory(namespace + "/tmp/pagerank");
 //            clear_output_directory(namespace + "/tmp/lpa");
             cur_mission++;

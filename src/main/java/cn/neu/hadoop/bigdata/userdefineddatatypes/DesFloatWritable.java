@@ -1,4 +1,4 @@
-package cn.neu.hadoop.bigdata.UserDefinedDataTypes;
+package cn.neu.hadoop.bigdata.userdefineddatatypes;
 
 import org.apache.hadoop.io.FloatWritable;
 
