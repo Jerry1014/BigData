@@ -51,7 +51,7 @@ public class PageRankCompute {
         }
     }
 
-    public static String main(int repeat_time, String name_node) throws IOException, ClassNotFoundException, InterruptedException {
+    public static void main(int repeat_time, String name_node) throws IOException, ClassNotFoundException, InterruptedException {
         GraphBuilder.main(name_node + input_path, name_node + tmp_output_path + tmp_count);
         tmp_count++;
         while (repeat_time > 0) {
@@ -69,12 +69,11 @@ public class PageRankCompute {
             tmp_count++;
         }
         PageRankViewer.main(name_node + tmp_output_path + (tmp_count - 1), name_node + output_path);
-        return tmp_output_path + (tmp_count - 1);
     }
 
-    public static String main(String in_path, String out_path, int repeat_time, String name_node) throws IOException, InterruptedException, ClassNotFoundException {
+    public static void main(String in_path, String out_path, int repeat_time, String name_node) throws IOException, InterruptedException, ClassNotFoundException {
         input_path = in_path;
         output_path = out_path;
-        return main(repeat_time, name_node);
+        main(repeat_time, name_node);
     }
 }
