@@ -18,7 +18,7 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class LPAIteration {
+public class LPACompute {
     private static String input_path = "/test/input";
     private static String output_path = "/test/output4";
     private static String tmp_output_path = "/test/tmp/pagerank/";
@@ -89,7 +89,7 @@ public class LPAIteration {
 
         while (repeat_time > 0) {
             Job job = Job.getInstance();
-            job.setJarByClass(LPAIteration.class);
+            job.setJarByClass(LPACompute.class);
             job.setMapperClass(LPAIterMapper.class);
             job.setReducerClass(LPAIterReduce.class);
             job.setOutputKeyClass(Text.class);

@@ -1,5 +1,6 @@
 package cn.neu.hadoop.bigdata;
 
+import cn.neu.hadoop.bigdata.LPA.LPACompute;
 import cn.neu.hadoop.bigdata.pagerank.PageRankCompute;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -35,28 +36,34 @@ public class CharacterRelationshipAnalysis {
         String output_path_format = namespace + "/output";
 
         try {
-            cur_mission = 1;
-
             clear_output_directory(input_path);
             hadoopTemplate.uploadDir(source_data_path, input_path);
             cur_mission++;
+
             clear_output_directory(output_path_format + cur_mission);
             hadoopTemplate.uploadFile(source_all_person_name_file_path, all_person_name_file_path);
             String all_person_name = hadoopTemplate.read(true, all_person_name_file_path + all_person_filename);
             NameSplit.main(input_path, output_path_format + cur_mission, name_node, all_person_name);
             cur_mission++;
+
             clear_output_directory(output_path_format + cur_mission);
             NameCount.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, name_node);
             cur_mission++;
+
             clear_output_directory(output_path_format + cur_mission);
             BuildRelationshipMap.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, name_node);
             cur_mission++;
 
-//             两种不同的人物关系计算方法
+            String tmp_PR_result_path;
             clear_output_directory(output_path_format + cur_mission);
             clear_output_directory(namespace + "/tmp");
-            PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 1, name_node);
+            tmp_PR_result_path = PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 10, name_node);
             cur_mission++;
+
+            LPACompute.main(tmp_PR_result_path, output_path_format + cur_mission, 10, name_node);
+            clear_output_directory(namespace + "/tmp");
+            cur_mission++;
+
             hadoopTemplate.read(false, output_path_format + (cur_mission - 1) + "/part-r-00000");
         } catch (Exception e) {
             e.printStackTrace();
