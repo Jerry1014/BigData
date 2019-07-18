@@ -18,8 +18,8 @@ import java.util.HashMap;
 @Slf4j
 public class LPAClassificationViewer {
     public static class LPAViewerMapper extends Mapper<Object, Text, IntWritable, Text> {
-        static HashMap<String, Integer> appear_label = new HashMap<>();
-        static int label_no = 0;
+        HashMap<String, Integer> appear_label = new HashMap<>();
+        int label_no = 0;
 
         public void map(Object key, Text values, Context context) throws IOException, InterruptedException {
             String[] key_value = values.toString().split("\t");

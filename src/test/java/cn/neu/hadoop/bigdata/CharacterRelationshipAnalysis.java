@@ -67,7 +67,7 @@ public class CharacterRelationshipAnalysis {
             clear_output_directory(namespace + "/tmp/lpa");
             LPACompute.main(pagerank_output_path, output_path_format + cur_mission, 10, name_node);
 //            clear_output_directory(namespace + "/tmp/pagerank");
-            clear_output_directory(namespace + "/tmp/lpa");
+//            clear_output_directory(namespace + "/tmp/lpa");
             cur_mission++;
 
             hadoopTemplate.read(false, output_path_format + (cur_mission - 1) + "/part-r-00000");
