@@ -1,19 +1,17 @@
-package cn.neu.hadoop.bigdata;
+package cn.neu.hadoop.bigdata.pagerank;
 
+import cn.neu.hadoop.bigdata.UserDefinedDataTypes.DesFloatWritable;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 
 @Component
@@ -51,16 +49,3 @@ public class PageRankViewer {
     }
 }
 
-class DesFloatWritable extends FloatWritable {
-    DesFloatWritable() {
-    }
-
-    DesFloatWritable(float num) {
-        super(num);
-    }
-
-    @Override
-    public int compareTo(FloatWritable o) {
-        return -super.compareTo(o);
-    }
-}

@@ -1,5 +1,6 @@
 package cn.neu.hadoop.bigdata;
 
+import cn.neu.hadoop.bigdata.pagerank.PageRankCompute;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

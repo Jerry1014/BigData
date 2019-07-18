@@ -1,20 +1,16 @@
-package cn.neu.hadoop.bigdata;
+package cn.neu.hadoop.bigdata.pagerank;
 
-import ch.qos.logback.classic.pattern.ClassNameOnlyAbbreviator;
+import cn.neu.hadoop.bigdata.NameSplit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
 import java.io.IOException;
 
 @Component

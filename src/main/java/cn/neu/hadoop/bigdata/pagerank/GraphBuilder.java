@@ -1,4 +1,4 @@
-package cn.neu.hadoop.bigdata;
+package cn.neu.hadoop.bigdata.pagerank;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.Path;
@@ -17,7 +17,7 @@ public class GraphBuilder {
     public static class InitMap extends Mapper<Object, Text, Text, Text> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             String[] key_value = value.toString().split("\t");
-            context.write(new Text(key_value[0]), new Text("1#" + key_value[1]));
+            context.write(new Text(key_value[0]), new Text("0.1#" + key_value[1]));
         }
     }
 
