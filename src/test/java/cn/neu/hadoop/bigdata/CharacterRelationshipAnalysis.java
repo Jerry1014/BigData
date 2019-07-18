@@ -54,24 +54,22 @@ public class CharacterRelationshipAnalysis {
 //            BuildRelationshipMap.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, name_node);
 //            cur_mission++;
 //
+            cur_mission = 4;
 
-//            String tmp_PR_result_path;
-//            clear_output_directory(output_path_format + cur_mission);
-//            clear_output_directory(namespace + "/tmp/pagerank");
-//            tmp_PR_result_path = PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 10, name_node);
-//            cur_mission++;
-
-            String tmp_PR_result_path = "/test/tmp/pagerank/9";
-            cur_mission = 5;
+            String tmp_PR_result_path;
+            clear_output_directory(output_path_format + cur_mission);
+            clear_output_directory(namespace + "/tmp/pagerank");
+            tmp_PR_result_path = PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 10, name_node);
+            cur_mission++;
 
             clear_output_directory(output_path_format + cur_mission);
             clear_output_directory(namespace + "/tmp/lpa");
-            LPACompute.main(tmp_PR_result_path, output_path_format + cur_mission, 100, name_node);
-//            clear_output_directory(namespace + "/tmp/lpa");
-//            clear_output_directory(namespace + "/tmp/pagerank");
+            LPACompute.main(tmp_PR_result_path, output_path_format + cur_mission, 10, name_node);
+            clear_output_directory(namespace + "/tmp/lpa");
+            clear_output_directory(namespace + "/tmp/pagerank");
             cur_mission++;
 
-            hadoopTemplate.read(false, output_path_format + (cur_mission - 1) + "/part-r-00000");
+            hadoopTemplate.read(false, output_path_format + (cur_mission - 2) + "/part-r-00000");
         } catch (Exception e) {
             e.printStackTrace();
             assert false;

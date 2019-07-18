@@ -35,16 +35,18 @@ public class LPAReorganize {
                 next_no++;
             }
             context.write(new DesFloatWritable(PR), new Text(name_label[0] + '#' + next_no));
+            context.write(new DesFloatWritable(PR), new Text(name_label[0]));
         }
     }
 
     public static class LPAReorganizePartitioner extends Partitioner<DesFloatWritable, Text> {
-        static HashMap<String, Integer> label_label_no = new HashMap<>();
+        HashMap<String, Integer> label_label_no = new HashMap<>();
         static int next_no = 0;
 
         @Override
         public int getPartition(DesFloatWritable desFloatWritable, Text text, int i) {
             String[] name_label = text.toString().split("#");
+//            String[] name_label = {"",text.toString()};
             if (label_label_no.containsKey(name_label[1])) {
                 return label_label_no.get(name_label[1]);
             } else {
@@ -73,7 +75,7 @@ public class LPAReorganize {
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(input_path));
         FileOutputFormat.setOutputPath(job, new Path(output_path));
-        job.setNumReduceTasks(300);
+//        job.setNumReduceTasks(500);
         job.waitForCompletion(true);
     }
 }

@@ -44,7 +44,7 @@ public class LPACompute {
     }
 
     public static class LPAIterReduce extends Reducer<Text, Text, Text, Text> {
-        static HashMap<String, String> name_label = new HashMap<>();
+        HashMap<String, String> name_label = new HashMap<>();
 
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             String PR_name_list = "";
