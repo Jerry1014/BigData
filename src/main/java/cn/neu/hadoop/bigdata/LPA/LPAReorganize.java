@@ -45,8 +45,8 @@ public class LPAReorganize {
 
         @Override
         public int getPartition(DesFloatWritable desFloatWritable, Text text, int i) {
-            String[] name_label = text.toString().split("#");
-//            String[] name_label = {"",text.toString()};
+//            String[] name_label = text.toString().split("#");
+            String[] name_label = {"",text.toString()};
             if (label_label_no.containsKey(name_label[1])) {
                 return label_label_no.get(name_label[1]);
             } else {
@@ -75,7 +75,7 @@ public class LPAReorganize {
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(input_path));
         FileOutputFormat.setOutputPath(job, new Path(output_path));
-//        job.setNumReduceTasks(500);
+//        job.setNumReduceTasks(300);
         job.waitForCompletion(true);
     }
 }

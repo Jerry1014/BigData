@@ -56,20 +56,20 @@ public class CharacterRelationshipAnalysis {
 //
             cur_mission = 4;
 
-            String tmp_PR_result_path;
+            String pagerank_output_path;
             clear_output_directory(output_path_format + cur_mission);
             clear_output_directory(namespace + "/tmp/pagerank");
-            tmp_PR_result_path = PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 10, name_node);
+            pagerank_output_path = PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 10, name_node);
             cur_mission++;
 
             clear_output_directory(output_path_format + cur_mission);
             clear_output_directory(namespace + "/tmp/lpa");
-            LPACompute.main(tmp_PR_result_path, output_path_format + cur_mission, 10, name_node);
-            clear_output_directory(namespace + "/tmp/lpa");
+            LPACompute.main(pagerank_output_path, output_path_format + cur_mission, 10, name_node);
             clear_output_directory(namespace + "/tmp/pagerank");
+            clear_output_directory(namespace + "/tmp/lpa");
             cur_mission++;
 
-            hadoopTemplate.read(false, output_path_format + (cur_mission - 2) + "/part-r-00000");
+            hadoopTemplate.read(false, output_path_format + (cur_mission - 1) + "/part-r-00000");
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
