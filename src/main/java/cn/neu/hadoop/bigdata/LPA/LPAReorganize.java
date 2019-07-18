@@ -35,7 +35,7 @@ public class LPAReorganize {
                 next_no++;
             }
             context.write(new DesFloatWritable(PR), new Text(name_label[0] + '#' + next_no));
-            context.write(new DesFloatWritable(PR), new Text(name_label[0]));
+//            context.write(new DesFloatWritable(PR), new Text(name_label[0]));
         }
     }
 
