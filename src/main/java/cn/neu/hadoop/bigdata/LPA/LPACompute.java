@@ -19,6 +19,7 @@ import java.util.List;
 @Component
 @Slf4j
 public class LPACompute {
+    // 对于要迭代的地方来说，不要瞎用static，并不会每次迭代创建新值
     private static String input_path = "/test/input";
     private static String output_path = "/test/output4";
     private static String tmp_output_path = "/test/tmp/lpa/";
@@ -98,6 +99,8 @@ public class LPACompute {
             FileInputFormat.addInputPath(job, new Path(name_node + tmp_output_path + (tmp_count - 1)));
             FileOutputFormat.setOutputPath(job, new Path(name_node + tmp_output_path + tmp_count));
             job.waitForCompletion(true);
+
+            LPAClassificationViewer.main(name_node + tmp_output_path + tmp_count, name_node + tmp_output_path + tmp_count + "_v");
             repeat_time--;
             tmp_count++;
         }

@@ -54,18 +54,19 @@ public class CharacterRelationshipAnalysis {
 //            BuildRelationshipMap.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, name_node);
 //            cur_mission++;
 //
-            cur_mission = 4;
+//            String pagerank_output_path;
+//            clear_output_directory(output_path_format + cur_mission);
+//            clear_output_directory(namespace + "/tmp/pagerank");
+//            pagerank_output_path = PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 10, name_node);
+//            cur_mission++;
 
-            String pagerank_output_path;
-            clear_output_directory(output_path_format + cur_mission);
-            clear_output_directory(namespace + "/tmp/pagerank");
-            pagerank_output_path = PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 10, name_node);
-            cur_mission++;
+            cur_mission = 5;
+            String pagerank_output_path = "/test/tmp/pagerank/9";
 
             clear_output_directory(output_path_format + cur_mission);
             clear_output_directory(namespace + "/tmp/lpa");
             LPACompute.main(pagerank_output_path, output_path_format + cur_mission, 10, name_node);
-            clear_output_directory(namespace + "/tmp/pagerank");
+//            clear_output_directory(namespace + "/tmp/pagerank");
             clear_output_directory(namespace + "/tmp/lpa");
             cur_mission++;
 
