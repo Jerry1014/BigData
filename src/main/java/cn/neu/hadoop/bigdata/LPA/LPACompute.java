@@ -31,6 +31,7 @@ public class LPACompute {
             String[] name_and_label = key_value[0].split("#");
             String[] PR_and_name_list = key_value[1].split("#");
             String[] chain_name_and_weight_list = PR_and_name_list[1].split(";");
+            float PR = Float.valueOf(PR_and_name_list[0]);
 
             // PR值和人物关系权重不作改变，使用$做不同map的区分
             context.write(new Text(name_and_label[0]), new Text('$' + key_value[1]));
@@ -38,8 +39,10 @@ public class LPACompute {
             // 输出 <链出人物名，人物名#人物标签#关系边权重>
             for (String i : chain_name_and_weight_list) {
                 String[] name_and_weight = i.split(":");
+//                context.write(new Text(name_and_weight[0]), new Text(name_and_label[0] + '#' +
+//                        name_and_label[1] + '#' + name_and_weight[1]));
                 context.write(new Text(name_and_weight[0]), new Text(name_and_label[0] + '#' +
-                        name_and_label[1] + '#' + name_and_weight[1]));
+                        name_and_label[1] + '#' + PR * Float.valueOf(name_and_weight[1])));
             }
         }
     }
@@ -100,6 +103,7 @@ public class LPACompute {
             FileOutputFormat.setOutputPath(job, new Path(name_node + tmp_output_path + tmp_count));
             job.waitForCompletion(true);
 
+//            LPAResultClustering.main(name_node + tmp_output_path + tmp_count, name_node + tmp_output_path + tmp_count + "_V");
             repeat_time--;
             tmp_count++;
         }
