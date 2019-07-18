@@ -19,10 +19,22 @@ import java.util.HashMap;
 @Slf4j
 public class LPAReorganize {
     public static class LPAReorganizeMapper extends Mapper<Object, Text, DesFloatWritable, Text> {
+        static HashMap<String, Integer> label_label_no = new HashMap<>();
+        static int next_no = 0;
+
         public void map(Object key, Text values, Context context) throws IOException, InterruptedException {
             String[] key_value = values.toString().split("\t");
             float PR = Float.valueOf(key_value[1].split("#")[0]);
-            context.write(new DesFloatWritable(PR), new Text(key_value[0]));
+            String[] name_label = key_value[0].split("#");
+
+            int this_label;
+            if (label_label_no.containsKey(name_label[1])) this_label = label_label_no.get(name_label[1]);
+            else {
+                label_label_no.put(name_label[1], next_no);
+                this_label = next_no;
+                next_no++;
+            }
+            context.write(new DesFloatWritable(PR), new Text(name_label[0] + '#' + next_no));
         }
     }
 
@@ -61,6 +73,7 @@ public class LPAReorganize {
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(input_path));
         FileOutputFormat.setOutputPath(job, new Path(output_path));
+        job.setNumReduceTasks(300);
         job.waitForCompletion(true);
     }
 }

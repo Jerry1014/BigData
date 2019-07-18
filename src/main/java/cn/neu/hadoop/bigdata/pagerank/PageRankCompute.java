@@ -69,7 +69,7 @@ public class PageRankCompute {
             tmp_count++;
         }
         PageRankViewer.main(name_node + tmp_output_path + (tmp_count - 1), name_node + output_path);
-        return name_node + tmp_output_path + (tmp_count - 1);
+        return tmp_output_path + (tmp_count - 1);
     }
 
     public static String main(String in_path, String out_path, int repeat_time, String name_node) throws IOException, InterruptedException, ClassNotFoundException {

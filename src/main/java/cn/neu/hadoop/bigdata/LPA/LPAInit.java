@@ -21,11 +21,12 @@ import java.io.IOException;
  * 输出格式为 一灯大师#(int)1 PR#完颜萍:0.5;小龙女:0.5
  */
 public class LPAInit {
-    public static class InitMap extends Mapper<Object, Text, Text, Text>{
+    public static class InitMap extends Mapper<Object, Text, Text, Text> {
         private static int label_num = 0;
-        public void map(Object key,Text value, Context context) throws IOException, InterruptedException {
+
+        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             String[] key_value = value.toString().split("\t");
-            context.write(new Text(label_num+key_value[0]),new Text(key_value[1]));
+            context.write(new Text(key_value[0] + '#' + label_num), new Text(key_value[1]));
             label_num++;
         }
     }

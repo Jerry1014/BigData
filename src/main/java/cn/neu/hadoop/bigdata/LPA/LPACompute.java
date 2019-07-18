@@ -21,7 +21,7 @@ import java.util.List;
 public class LPACompute {
     private static String input_path = "/test/input";
     private static String output_path = "/test/output4";
-    private static String tmp_output_path = "/test/tmp/pagerank/";
+    private static String tmp_output_path = "/test/tmp/lpa/";
     private static int tmp_count = 0;
 
     public static class LPAIterMapper extends Mapper<Object, Text, Text, Text> {
@@ -32,7 +32,7 @@ public class LPACompute {
             String[] chain_name_and_weight_list = PR_and_name_list[1].split(";");
 
             // PR值和人物关系权重不作改变，使用$做不同map的区分
-            context.write(new Text(key_value[0]), new Text('$' + key_value[1]));
+            context.write(new Text(name_and_label[0]), new Text('$' + key_value[1]));
 
             // 输出 <链出人物名，人物名#人物标签#关系边权重>
             for (String i : chain_name_and_weight_list) {
@@ -48,9 +48,9 @@ public class LPACompute {
 
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             String PR_name_list = "";
-            Integer max_weight = 0;
+            Float max_weight = 0f;
             List<String> max_weight_label = new LinkedList<>();
-            HashMap<String, Integer> label_weight_sum = new HashMap<>();
+            HashMap<String, Float> label_weight_sum = new HashMap<>();
             for (Text i : values) {
                 String for_i_str = i.toString();
                 if (for_i_str.startsWith("$")) {
@@ -60,11 +60,11 @@ public class LPACompute {
                     if (name_label.containsKey(name_label_weight[0])) {
                         name_label_weight[1] = name_label.get(name_label_weight[0]);
                     }
-                    Integer weight = 0;
+                    Float weight = 0f;
                     if (label_weight_sum.containsKey(name_label_weight[1])) {
                         weight = label_weight_sum.get(name_label_weight[1]);
                     }
-                    weight += Integer.valueOf(name_label_weight[2]);
+                    weight += Float.valueOf(name_label_weight[2]);
                     label_weight_sum.put(name_label_weight[1], weight);
 
                     if (weight > max_weight) {

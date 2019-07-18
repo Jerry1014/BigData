@@ -92,7 +92,7 @@ public class HadoopTemplateTest {
 
     @Test
     public void read() throws Exception {
-        hadoopTemplate.read(false, "/test/userdic/jinyong_all_person.txt");
+        hadoopTemplate.read(false, "/test/output3/part-r-00000");
     }
 
     @Test
