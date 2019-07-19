@@ -23,15 +23,15 @@ public class PageRankCompute {
 
     public static class PageRankIterMapper extends Mapper<Object, Text, Text, Text> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            String[] key_and_value = value.toString().split("\t");
-            String[] point_and_relation_list = key_and_value[1].split("#");
-            float point = Float.valueOf(point_and_relation_list[0]);
+            String[] name_and_pr_relation_list = value.toString().split("\t");
+            String[] pr_and_relation_list = name_and_pr_relation_list[1].split("#");
+            float point = Float.valueOf(pr_and_relation_list[0]);
 
-            for (String i : point_and_relation_list[1].split(";")) {
-                String[] name_and_point = i.split(":");
-                context.write(new Text(name_and_point[0]), new Text(String.valueOf(point * Float.valueOf(name_and_point[1]))));
+            for (String i : pr_and_relation_list[1].split(";")) {
+                String[] name_and_weight = i.split(":");
+                context.write(new Text(name_and_weight[0]), new Text(String.valueOf(point * Float.valueOf(name_and_weight[1]))));
             }
-            context.write(new Text(key_and_value[0]), new Text('#' + point_and_relation_list[1]));
+            context.write(new Text(name_and_pr_relation_list[0]), new Text('#' + pr_and_relation_list[1]));
         }
     }
 
