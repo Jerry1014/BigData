@@ -18,59 +18,54 @@ import java.io.IOException;
 public class CharacterRelationshipAnalysis {
     @Value("${hadoop.name-node}")
     private String name_node;
+    @Value("${hadoop.namespace}")
+    private String namespace;
     @Autowired
     private HadoopTemplate hadoopTemplate;
-    @Value("${hadoop.namespace:/}")
-    private String namespace;
-
 
     @Test
     public void all_mission_test() {
         // 任务初始化
-        int cur_mission = 0;
         String source_all_person_name_file_path = "C:\\tem\\jinyong_all_person.txt";
-        String all_person_name_file_path = "/test/userdic/";
+        String all_person_name_file_path = namespace + "/userdic";
         String all_person_filename = "jinyong_all_person.txt";
-        String source_data_path = "C:\\tem\\data";
-        String input_path = namespace + "/input";
-        String output_path_format = namespace + "/output";
+        String local_source_data_path = "C:\\tem\\data";
+        String hadoop_source_data_path = namespace + "/input";
+        String name_split_output_path = namespace + "/output_ns";
+        String name_count_output_path = namespace + "/output_nc";
+        String relationship_count_output_path = namespace + "/output_rc";
+        String build_relationship_output_path = namespace + "/output_br";
+        String page_rank_output_path = namespace + "/output_pr";
+        String lpa_output_path = namespace + "/output_lpa";
+        String local_result_save_path = "C:\\tem\\";
 
         try {
-//            clear_output_directory(input_path);
-//            hadoopTemplate.uploadDir(source_data_path, input_path);
-//            cur_mission++;
-//
-//            clear_output_directory(output_path_format + cur_mission);
-//            hadoopTemplate.uploadFile(source_all_person_name_file_path, all_person_name_file_path);
-//            String all_person_name = hadoopTemplate.read(true, all_person_name_file_path + all_person_filename);
-//            NameSplit.main(input_path, output_path_format + cur_mission, name_node, all_person_name);
-//            cur_mission++;
-//
-//            clear_output_directory(output_path_format + cur_mission);
-//            NameCount.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, name_node);
-//            cur_mission++;
-//
-//            clear_output_directory(output_path_format + cur_mission);
-//            BuildRelationshipMap.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, name_node);
-//            cur_mission++;
-//
-//            String pagerank_output_path;
-//            clear_output_directory(output_path_format + cur_mission);
-//            clear_output_directory(namespace + "/tmp/pagerank");
-//            pagerank_output_path = PageRankCompute.main(output_path_format + (cur_mission - 1), output_path_format + cur_mission, 10, name_node);
-//            cur_mission++;
+            clear_output_directory(hadoop_source_data_path);
+            hadoopTemplate.uploadDir(local_source_data_path, hadoop_source_data_path);
 
-            cur_mission = 5;
-            String pagerank_output_path = "/test/tmp/pagerank/9";
+            clear_output_directory(name_split_output_path);
+            hadoopTemplate.uploadFile(source_all_person_name_file_path, all_person_name_file_path);
+            String all_person_name = hadoopTemplate.read(true, all_person_name_file_path + '/' + all_person_filename);
+            NameSplit.main(hadoop_source_data_path, name_split_output_path, name_node, all_person_name);
 
-            clear_output_directory(output_path_format + cur_mission);
+            clear_output_directory(name_count_output_path);
+            NameCount.main(name_split_output_path, name_count_output_path, name_node);
+
+            clear_output_directory(build_relationship_output_path);
+            BuildRelationshipMap.main(name_count_output_path, build_relationship_output_path, name_node);
+
+            clear_output_directory(page_rank_output_path);
+            clear_output_directory(namespace + "/tmp/pagerank");
+            PageRankCompute.main(build_relationship_output_path, page_rank_output_path, 10, name_node);
+            clear_output_directory(namespace + "/tmp/pagerank");
+
+            clear_output_directory(lpa_output_path);
             clear_output_directory(namespace + "/tmp/lpa");
-            LPACompute.main(pagerank_output_path, output_path_format + cur_mission, 6, name_node);
-//            clear_output_directory(namespace + "/tmp/pagerank");
-//            clear_output_directory(namespace + "/tmp/lpa");
-            cur_mission++;
+            LPACompute.main(page_rank_output_path, lpa_output_path, 6, name_node);
+            clear_output_directory(namespace + "/tmp/lpa");
 
-            hadoopTemplate.read(false, output_path_format + (cur_mission - 1) + "/part-r-00000");
+            hadoopTemplate.read(false, lpa_output_path + "/part-r-00000");
+            hadoopTemplate.download(lpa_output_path + "/part-r-00000", local_result_save_path);
         } catch (Exception e) {
             e.printStackTrace();
             assert false;

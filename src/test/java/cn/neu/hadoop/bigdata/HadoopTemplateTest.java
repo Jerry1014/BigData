@@ -61,6 +61,7 @@ public class HadoopTemplateTest {
 
     @Test
     public void getFile() {
+        hadoopTemplate.download("/output4/part-r-00000","C:\\tem\\");
     }
 
     @Test

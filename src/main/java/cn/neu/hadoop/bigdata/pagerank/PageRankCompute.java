@@ -12,7 +12,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.StreamTokenizer;
 
 @Component
 @Slf4j
@@ -47,7 +46,7 @@ public class PageRankCompute {
         }
     }
 
-    public static String main(String in_path, String out_path, int repeat_time, String name_node) throws IOException, ClassNotFoundException, InterruptedException {
+    public static void main(String in_path, String out_path, int repeat_time, String name_node) throws IOException, ClassNotFoundException, InterruptedException {
         String tmp_output_path = "/test/tmp/pagerank/";
         int tmp_count = 0;
 
@@ -62,12 +61,12 @@ public class PageRankCompute {
             job.setOutputValueClass(Text.class);
             job.setNumReduceTasks(1);//设置reduce的个数
             FileInputFormat.addInputPath(job, new Path(name_node + tmp_output_path + (tmp_count - 1)));
-            FileOutputFormat.setOutputPath(job, new Path(name_node + tmp_output_path + tmp_count));
+            if (repeat_time == 1) FileOutputFormat.setOutputPath(job, new Path(name_node + out_path));
+            else FileOutputFormat.setOutputPath(job, new Path(name_node + tmp_output_path + tmp_count));
             job.waitForCompletion(true);
             repeat_time--;
             tmp_count++;
         }
-        PageRankViewer.main(name_node + tmp_output_path + (tmp_count - 1), name_node + out_path);
-        return tmp_output_path + (tmp_count - 1);
+        PageRankViewer.main(name_node + out_path, name_node + out_path + "_d");
     }
 }
