@@ -20,12 +20,10 @@ import java.util.Map;
 import java.util.Objects;
 
 @Component
-// 泛指各种组件
 @ConditionalOnBean(FileSystem.class)
-// 实例化到容器的必须条件
 @Slf4j
-// 日志框架
 public class HadoopTemplate {
+
     @Autowired
     private FileSystem fileSystem;
 
@@ -36,9 +34,8 @@ public class HadoopTemplate {
     private String nameSpace;
 
     @PostConstruct
-    // 用于完成依赖注入项注入以执行任何初始化之后需要执行的方法，必须在类投入使用之前调用此方法
     public void init() {
-        this.existDir(nameSpace, true);
+        existDir(nameSpace, true);
     }
 
     public boolean exists(String path) throws IOException {
@@ -53,12 +50,6 @@ public class HadoopTemplate {
         copyFileToHDFS(false, true, srcFile, nameSpace);
     }
 
-    /**
-     * 上传文件到hdfs
-     *
-     * @param srcFile  源文件路径
-     * @param destPath hdfs的文件路径
-     */
     public void uploadFile(String srcFile, String destPath) {
         copyFileToHDFS(false, true, srcFile, destPath);
     }
@@ -86,16 +77,16 @@ public class HadoopTemplate {
     }
 
     public void download(String fileName, String savePath) {
-        getFile(nameSpace + "/" + fileName, savePath);
+        getFile("/" + fileName, savePath);
     }
 
 
     /**
      * 创建目录
      *
-     * @param filePath 文件路径
-     * @param create   当不存在时，是否创建
-     * @return 文件是否存在标志
+     * @param filePath
+     * @param create
+     * @return
      */
     public boolean existDir(String filePath, boolean create) {
         boolean flag = false;
@@ -123,7 +114,7 @@ public class HadoopTemplate {
      * 文件上传至 HDFS
      *
      * @param delSrc    指是否删除源文件，true为删除，默认为false
-     * @param overwrite 当文件已经存在时，是否覆写
+     * @param overwrite
      * @param srcFile   源文件，上传文件路径
      * @param destPath  hdfs的目的路径
      */
@@ -150,9 +141,9 @@ public class HadoopTemplate {
 
 
     /**
-     * 删除文件或者文件目录，当filename为""时，为删除目录
+     * 删除文件或者文件目录
      *
-     * @param path 路径
+     * @param path
      */
     public void rmdir(String path, String fileName) {
         try {
@@ -173,7 +164,7 @@ public class HadoopTemplate {
     /**
      * 从 HDFS 下载文件
      *
-     * @param hdfsFile hdfs文件路径
+     * @param hdfsFile
      * @param destPath 文件下载后,存放地址
      */
     public void getFile(String hdfsFile, String destPath) {
@@ -266,14 +257,7 @@ public class HadoopTemplate {
         return map;
     }
 
-    /**
-     * 读取hdfs文件
-     *
-     * @param fileName  要读取的hdfs文件路径
-     * @param if_return 选择输出到屏幕或是返回str
-     * @return 文件内容str
-     * @throws Exception 打开文件的IOException
-     */
+    //read
     public String read(boolean if_return, String fileName) throws Exception {
         Path path = new Path(fileName);
         FSDataInputStream inStream = fileSystem.open(path);
@@ -286,22 +270,15 @@ public class HadoopTemplate {
         }
         return byteArrayOutputStream.toString();
     }
-
-    /**
-     * 写入hdfs文件
-     *
-     * @param outputFileName 要写入的hdfs文件路径
-     * @param content        要写入的内容
-     * @throws Exception 打开文件的IOException
-     */
-    public void write(String outputFileName, String content) throws Exception {
+    //write
+    public void write(String outputFileName, String content) throws Exception{
         InputStream reader = new ByteArrayInputStream(content.getBytes());
-        FSDataOutputStream outStream = fileSystem.create(new Path(outputFileName));
-        try {
+        FSDataOutputStream outStream=fileSystem.create(new Path(outputFileName));
+        try{
             IOUtils.copyBytes(reader, outStream, 4096, false);
-        } catch (Exception e) {
+        }catch(Exception e){
             e.printStackTrace();
-        } finally {
+        }finally{
             IOUtils.closeStream(reader);
             IOUtils.closeStream(outStream);
         }
