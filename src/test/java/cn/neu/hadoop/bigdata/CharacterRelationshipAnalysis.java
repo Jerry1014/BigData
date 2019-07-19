@@ -24,7 +24,7 @@ public class CharacterRelationshipAnalysis {
     String namespace = "/test";
 
     private String source_all_person_name_file_path = "C:\\tem\\jinyong_all_person.txt";
-    private String all_person_name_file_path = namespace + "/userdic";
+    private String all_person_name_file_path = namespace + "/userdic/";
     private String all_person_filename = "jinyong_all_person.txt";
     private String local_source_data_path = "C:\\tem\\data";
     private String hadoop_source_data_path = namespace + "/input";
@@ -42,8 +42,8 @@ public class CharacterRelationshipAnalysis {
         hadoopTemplate.uploadDir(local_source_data_path, hadoop_source_data_path);
 
         clear_output_directory(name_split_output_path);
-        hadoopTemplate.uploadFile(source_all_person_name_file_path, all_person_name_file_path);
-        String all_person_name = hadoopTemplate.read(true, all_person_name_file_path + '/' + all_person_filename);
+        hadoopTemplate.uploadFile(source_all_person_name_file_path, all_person_name_file_path + all_person_filename);
+        String all_person_name = hadoopTemplate.read(true, all_person_name_file_path + all_person_filename);
         NameSplit.main(hadoop_source_data_path, name_split_output_path, name_node, all_person_name);
 
         clear_output_directory(name_count_output_path);
