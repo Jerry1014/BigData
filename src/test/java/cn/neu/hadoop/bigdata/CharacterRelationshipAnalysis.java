@@ -18,10 +18,10 @@ import java.io.IOException;
 public class CharacterRelationshipAnalysis {
     @Value("${hadoop.name-node}")
     private String name_node;
-    @Value("${hadoop.namespace}")
-    private String namespace;
     @Autowired
     private HadoopTemplate hadoopTemplate;
+    // 不知道为什么，如果在配置文件中读取在下列拼接中会为null
+    String namespace = "/test";
 
     private String source_all_person_name_file_path = "C:\\tem\\jinyong_all_person.txt";
     private String all_person_name_file_path = namespace + "/userdic";
