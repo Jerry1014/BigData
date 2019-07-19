@@ -3,14 +3,12 @@ package cn.neu.hadoop.bigdata;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,7 +16,7 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class NameCount {
-    public class NameCountMapper extends Mapper<Object, Text, Text, IntWritable> {
+    public static class NameCountMapper extends Mapper<Object, Text, Text, IntWritable> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             String[] names = value.toString().split(" ");
             for (String i : names) {
@@ -27,7 +25,7 @@ public class NameCount {
         }
     }
 
-    public class NameCountReduce extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class NameCountReduce extends Reducer<Text, IntWritable, Text, IntWritable> {
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
             int sum = 0;
             for (IntWritable i : values) {
@@ -37,7 +35,7 @@ public class NameCount {
         }
     }
 
-    public void main(String in_path, String out_path, String name_node) throws IOException, ClassNotFoundException, InterruptedException {
+    public static void main(String in_path, String out_path, String name_node) throws IOException, ClassNotFoundException, InterruptedException {
         Job job = Job.getInstance();
         job.setJarByClass(NameCount.class);
         job.setMapperClass(NameCountMapper.class);

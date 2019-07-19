@@ -24,8 +24,8 @@ public class LPAInit {
     public static class InitMap extends Mapper<Object, Text, Text, Text> {
         private static int label_num = 0;
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            String[] key_value = value.toString().split("\t");
-            context.write(new Text(key_value[0] + '#' + label_num), new Text(key_value[1]));
+            String[] name_and_PR_relationship_list = value.toString().split("\t");
+            context.write(new Text(name_and_PR_relationship_list[0] + '#' + label_num), new Text(name_and_PR_relationship_list[1]));
             label_num++;
         }
     }

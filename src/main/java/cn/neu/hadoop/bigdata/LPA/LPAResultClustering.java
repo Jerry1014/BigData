@@ -21,7 +21,6 @@ public class LPAResultClustering {
 
     public static class LPAViewerMapper extends Mapper<Object, Text, IntWritable, Text> {
         HashMap<String, Integer> appear_label = new HashMap<>();
-
         public void map(Object key, Text values, Context context) throws IOException, InterruptedException {
             String[] key_value = values.toString().split("\t");
             String[] name_label = key_value[0].split("#");

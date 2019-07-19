@@ -31,12 +31,8 @@ public class LPAReorganize {
     public static class LPAReorganizePartitioner extends Partitioner<DesFloatWritable, Text> {
         HashMap<String, Integer> label_label_no = new HashMap<>();
         int next_no = 0;
-
         @Override
         public int getPartition(DesFloatWritable desFloatWritable, Text text, int i) {
-            if(label_label_no.size()%10==0){
-                log.error("卧槽");
-            }
             String[] label_name = text.toString().split("#");
             if (label_label_no.containsKey(label_name[0])) {
                 return label_label_no.get(label_name[0]);
@@ -68,7 +64,6 @@ public class LPAReorganize {
         FileInputFormat.addInputPath(job, new Path(input_path));
         FileOutputFormat.setOutputPath(job, new Path(output_path));
         job.setNumReduceTasks(num_cluster);
-//        job.setNumReduceTasks(500);
         job.waitForCompletion(true);
     }
 }

@@ -12,15 +12,11 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.StreamTokenizer;
 
 @Component
 @Slf4j
 public class PageRankCompute {
-    private static String input_path = "/test/input";
-    private static String output_path = "/test/output4";
-    private static String tmp_output_path = "/test/tmp/pagerank/";
-    private static int tmp_count = 0;
-
     public static class PageRankIterMapper extends Mapper<Object, Text, Text, Text> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             String[] name_and_pr_relation_list = value.toString().split("\t");
@@ -28,8 +24,8 @@ public class PageRankCompute {
             float point = Float.valueOf(pr_and_relation_list[0]);
 
             for (String i : pr_and_relation_list[1].split(";")) {
-                String[] name_and_weight = i.split(":");
-                context.write(new Text(name_and_weight[0]), new Text(String.valueOf(point * Float.valueOf(name_and_weight[1]))));
+                String[] relationship_name_and_weight = i.split(":");
+                context.write(new Text(relationship_name_and_weight[0]), new Text(String.valueOf(point * Float.valueOf(relationship_name_and_weight[1]))));
             }
             context.write(new Text(name_and_pr_relation_list[0]), new Text('#' + pr_and_relation_list[1]));
         }
@@ -51,8 +47,11 @@ public class PageRankCompute {
         }
     }
 
-    public static String main(int repeat_time, String name_node) throws IOException, ClassNotFoundException, InterruptedException {
-        GraphBuilder.main(name_node + input_path, name_node + tmp_output_path + tmp_count);
+    public static String main(String in_path, String out_path, int repeat_time, String name_node) throws IOException, ClassNotFoundException, InterruptedException {
+        String tmp_output_path = "/test/tmp/pagerank/";
+        int tmp_count = 0;
+
+        GraphBuilder.main(name_node + in_path, name_node + tmp_output_path + tmp_count);
         tmp_count++;
         while (repeat_time > 0) {
             Job job = Job.getInstance();
@@ -68,13 +67,7 @@ public class PageRankCompute {
             repeat_time--;
             tmp_count++;
         }
-        PageRankViewer.main(name_node + tmp_output_path + (tmp_count - 1), name_node + output_path);
+        PageRankViewer.main(name_node + tmp_output_path + (tmp_count - 1), name_node + out_path);
         return tmp_output_path + (tmp_count - 1);
-    }
-
-    public static String main(String in_path, String out_path, int repeat_time, String name_node) throws IOException, InterruptedException, ClassNotFoundException {
-        input_path = in_path;
-        output_path = out_path;
-        return main(repeat_time, name_node);
     }
 }

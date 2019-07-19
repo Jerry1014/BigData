@@ -26,8 +26,6 @@ import java.util.List;
 @Slf4j
 public class NameSplit {
     private static HashSet<String> name_set = new HashSet<>();
-    private static String input_path = "/test/input";
-    private static String output_path = "/test/output1";
 
     public static class NameLineMapper extends Mapper<Object, Text, Text, Text> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -59,8 +57,9 @@ public class NameSplit {
         }
     }
 
-    public static void main(String name_node, String all_person_name) throws IOException, InterruptedException, ClassNotFoundException {
+    public static void main(String in_path, String out_path, String name_node, String all_person_name) throws IOException, InterruptedException, ClassNotFoundException {
         // 构建所有人物的字典
+        name_set.clear();
         for (String i : all_person_name.split("\r\n")) {
             name_set.add(i);
             DicLibrary.insert(DicLibrary.DEFAULT, i, "nr", DicLibrary.DEFAULT_FREQ);
@@ -75,14 +74,8 @@ public class NameSplit {
         job.setOutputKeyClass(LongWritable.class);
         job.setOutputValueClass(Text.class);
         job.setNumReduceTasks(1);//设置reduce的个数
-        FileInputFormat.addInputPath(job, new Path(name_node + input_path));
-        FileOutputFormat.setOutputPath(job, new Path(name_node + output_path));
+        FileInputFormat.addInputPath(job, new Path(name_node + in_path));
+        FileOutputFormat.setOutputPath(job, new Path(name_node + out_path));
         job.waitForCompletion(true);
-    }
-
-    public static void main(String in_path, String out_path, String name_node, String all_person_name) throws IOException, InterruptedException, ClassNotFoundException {
-        input_path = in_path;
-        output_path = out_path;
-        main(name_node, all_person_name);
     }
 }

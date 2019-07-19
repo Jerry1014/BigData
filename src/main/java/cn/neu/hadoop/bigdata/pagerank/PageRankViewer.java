@@ -19,11 +19,11 @@ import java.io.IOException;
 public class PageRankViewer {
     public static class PageRankViewerMapper extends Mapper<Object, Text, DesFloatWritable, Text> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            String[] key_and_value = value.toString().split("\t");
-            String[] point_and_list = key_and_value[1].split("#");
-            float point = Float.valueOf(point_and_list[0]);
+            String[] name_and_point_relationship_list = value.toString().split("\t");
+            String[] point_and_relationship_list = name_and_point_relationship_list[1].split("#");
+            float point = Float.valueOf(point_and_relationship_list[0]);
 
-            context.write(new DesFloatWritable(point), new Text(key_and_value[0]));
+            context.write(new DesFloatWritable(point), new Text(name_and_point_relationship_list[0]));
         }
     }
 

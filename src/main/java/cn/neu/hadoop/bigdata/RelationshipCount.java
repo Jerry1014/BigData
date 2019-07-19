@@ -16,9 +16,6 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class RelationshipCount {
-    private static String input_path = "/test/input";
-    private static String output_path = "/test/output2";
-
     public static class NameCountMapper extends Mapper<Object, Text, Text, IntWritable> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             String[] all_name = value.toString().split(" ");
@@ -46,7 +43,7 @@ public class RelationshipCount {
         }
     }
 
-    public static void main(String name_node) throws IOException, InterruptedException, ClassNotFoundException {
+    public static void main(String in_path, String out_path, String name_node) throws IOException, InterruptedException, ClassNotFoundException {
         Job job = Job.getInstance();
         job.setJarByClass(RelationshipCount.class);
         job.setMapperClass(NameCountMapper.class);
@@ -55,14 +52,8 @@ public class RelationshipCount {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
         job.setNumReduceTasks(1);
-        FileInputFormat.addInputPath(job, new Path(name_node + input_path));
-        FileOutputFormat.setOutputPath(job, new Path(name_node + output_path));
+        FileInputFormat.addInputPath(job, new Path(name_node + in_path));
+        FileOutputFormat.setOutputPath(job, new Path(name_node + out_path));
         job.waitForCompletion(true);
-    }
-
-    public static void main(String in_path, String out_path, String name_node) throws IOException, InterruptedException, ClassNotFoundException {
-        input_path = in_path;
-        output_path = out_path;
-        main(name_node);
     }
 }
