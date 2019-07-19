@@ -42,7 +42,7 @@ public class LPACompute {
 //                context.write(new Text(name_and_weight[0]), new Text(name_and_label[0] + '#' +
 //                        name_and_label[1] + '#' + PR * Float.valueOf(name_and_weight[1])));
                 context.write(new Text(name_and_weight[0]), new Text(name_and_label[0] + '#' +
-                        name_and_label[1]));
+                        name_and_label[1] + '#' + PR));
             }
         }
     }
@@ -102,17 +102,18 @@ public class LPACompute {
             Float max_point = 0f;
             List<String> max_weight_label = new LinkedList<>();
             for (String i : label_buffer) {
-                String[] name2_label2 = i.split("#");
-                if (name_label.containsKey(name2_label2[0])) name2_label2[1] = name_label.get(name2_label2[0]);
-                Float weight = name_weight.get(name2_label2[0]);
-                if (label_point.containsKey(name2_label2[1])) weight += label_point.get(name2_label2[1]);
-                label_point.put(name2_label2[1], weight);
+                String[] name2_label2_name1pr = i.split("#");
+                if (name_label.containsKey(name2_label2_name1pr[0])) name2_label2_name1pr[1] = name_label.get(name2_label2_name1pr[0]);
+//                Float weight = name_weight.get(name2_label2_name1pr[0]);
+                Float weight = name_weight.get(name2_label2_name1pr[0]) * Float.valueOf(name2_label2_name1pr[2]);
+                if (label_point.containsKey(name2_label2_name1pr[1])) weight += label_point.get(name2_label2_name1pr[1]);
+                label_point.put(name2_label2_name1pr[1], weight);
                 if (weight > max_point) {
                     max_point = weight;
                     max_weight_label.clear();
-                    max_weight_label.add(name2_label2[1]);
+                    max_weight_label.add(name2_label2_name1pr[1]);
                 } else if (weight.equals(max_point)) {
-                    max_weight_label.add(name2_label2[1]);
+                    max_weight_label.add(name2_label2_name1pr[1]);
                 }
             }
 
