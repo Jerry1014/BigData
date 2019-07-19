@@ -20,11 +20,11 @@ import java.util.HashMap;
 public class LPAReorganize {
     public static class LPAReorganizeMapper extends Mapper<Object, Text, DesFloatWritable, Text> {
         public void map(Object key, Text values, Context context) throws IOException, InterruptedException {
-            String[] label_and_name_pr = values.toString().split("\t");
-            String[] name_and_pr = label_and_name_pr[1].split("#");
-            float PR = Float.valueOf(name_and_pr[1]);
+            String[] label_and_name_pr_relationship_list = values.toString().split("\t");
+            String[] name_and_pr_relation_list = label_and_name_pr_relationship_list[1].split("#");
+            float PR = Float.valueOf(name_and_pr_relation_list[1]);
 
-            context.write(new DesFloatWritable(PR), new Text(label_and_name_pr[0] + '#' + name_and_pr[0]));
+            context.write(new DesFloatWritable(PR), new Text(label_and_name_pr_relationship_list[0] + '#' + name_and_pr_relation_list[0]));
         }
     }
 

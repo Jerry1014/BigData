@@ -28,10 +28,10 @@ public class LPAResultClustering {
             float PR = Float.valueOf(key_value[1].split("#")[0]);
 
             if (appear_label.containsKey(name_label[1]))
-                context.write(new IntWritable(appear_label.get(name_label[1])), new Text(name_label[0] + '#' + PR));
+                context.write(new IntWritable(appear_label.get(name_label[1])), new Text(name_label[0] + '#' + PR + '#' + key_value[1].split("#")[1]));
             else {
                 appear_label.put(name_label[1], label_no);
-                context.write(new IntWritable(label_no), new Text(name_label[0] + '#' + PR));
+                context.write(new IntWritable(label_no), new Text(name_label[0] + '#' + PR + '#' + key_value[1].split("#")[1]));
                 label_no++;
             }
         }

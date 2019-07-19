@@ -103,10 +103,12 @@ public class LPACompute {
             List<String> max_weight_label = new LinkedList<>();
             for (String i : label_buffer) {
                 String[] name2_label2_name1pr = i.split("#");
-                if (name_label.containsKey(name2_label2_name1pr[0])) name2_label2_name1pr[1] = name_label.get(name2_label2_name1pr[0]);
-//                Float weight = name_weight.get(name2_label2_name1pr[0]);
-                Float weight = name_weight.get(name2_label2_name1pr[0]) * Float.valueOf(name2_label2_name1pr[2]);
-                if (label_point.containsKey(name2_label2_name1pr[1])) weight += label_point.get(name2_label2_name1pr[1]);
+                if (name_label.containsKey(name2_label2_name1pr[0]))
+                    name2_label2_name1pr[1] = name_label.get(name2_label2_name1pr[0]);
+                Float weight = name_weight.get(name2_label2_name1pr[0]);
+//                Float weight = name_weight.get(name2_label2_name1pr[0]) * Float.valueOf(name2_label2_name1pr[2]);
+                if (label_point.containsKey(name2_label2_name1pr[1]))
+                    weight += label_point.get(name2_label2_name1pr[1]);
                 label_point.put(name2_label2_name1pr[1], weight);
                 if (weight > max_point) {
                     max_point = weight;
@@ -139,15 +141,14 @@ public class LPACompute {
             FileOutputFormat.setOutputPath(job, new Path(name_node + tmp_output_path + tmp_count));
             job.waitForCompletion(true);
 
-            LPAResultClustering.main(name_node + tmp_output_path + tmp_count, name_node + tmp_output_path + tmp_count + "_V");
+//            LPAResultClustering.main(name_node + tmp_output_path + tmp_count, name_node + tmp_output_path + tmp_count + "_d");
             repeat_time--;
             tmp_count++;
         }
         // 对lpa结果做聚类
-        int num_cluster = LPAResultClustering.main(name_node + tmp_output_path + (tmp_count - 1), name_node + tmp_output_path + tmp_count);
-        tmp_count++;
+        int num_cluster = LPAResultClustering.main(name_node + tmp_output_path + (tmp_count - 1), name_node + output_path);
         // 对聚类后的结果进行分离
-        LPAReorganize.main(name_node + tmp_output_path + (tmp_count - 1), name_node + output_path, num_cluster);
+        LPAReorganize.main(name_node + output_path, name_node + tmp_output_path + tmp_count, num_cluster);
     }
 
     public static void main(String in_path, String out_path, int repeat_time, String name_node) throws IOException, InterruptedException, ClassNotFoundException {
