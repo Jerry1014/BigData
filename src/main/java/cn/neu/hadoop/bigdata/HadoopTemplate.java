@@ -2,10 +2,7 @@ package cn.neu.hadoop.bigdata;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.util.ReflectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 @ConditionalOnBean(FileSystem.class)
@@ -38,12 +33,25 @@ public class HadoopTemplate {
         existDir(nameSpace, true);
     }
 
-    public boolean exists(String path) throws IOException {
-        return fileSystem.exists(new Path(path));
+    public boolean existsFile(String path) throws IOException {
+        return this.existsFile(new Path(path));
     }
 
-    public boolean exists(Path path) throws IOException {
+    public boolean existsFile(Path path) throws IOException {
         return fileSystem.exists(path);
+    }
+
+    public String[] list(String path) throws IOException {
+        return this.list(new Path(path));
+    }
+
+    public String[] list(Path path) throws IOException {
+        RemoteIterator filename_iter = fileSystem.listFiles(path, false);
+        List<String> filename_list = new LinkedList<>();
+        while (filename_iter.hasNext()) {
+            filename_list.add(filename_iter.next().toString());
+        }
+        return (String[]) filename_list.toArray();
     }
 
     public void uploadFile(String srcFile) {
@@ -270,15 +278,16 @@ public class HadoopTemplate {
         }
         return byteArrayOutputStream.toString();
     }
+
     //write
-    public void write(String outputFileName, String content) throws Exception{
+    public void write(String outputFileName, String content) throws Exception {
         InputStream reader = new ByteArrayInputStream(content.getBytes());
-        FSDataOutputStream outStream=fileSystem.create(new Path(outputFileName));
-        try{
+        FSDataOutputStream outStream = fileSystem.create(new Path(outputFileName));
+        try {
             IOUtils.copyBytes(reader, outStream, 4096, false);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             IOUtils.closeStream(reader);
             IOUtils.closeStream(outStream);
         }

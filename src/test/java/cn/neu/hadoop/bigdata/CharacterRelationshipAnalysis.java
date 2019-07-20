@@ -115,7 +115,7 @@ public class CharacterRelationshipAnalysis {
     }
 
     public void clear_output_directory(String path) throws IOException {
-        if (hadoopTemplate.exists(path)) {
+        if (hadoopTemplate.existsFile(path)) {
             hadoopTemplate.delDir(path);//true的意思是，就算output里面有东西，也一带删除
         }
     }
