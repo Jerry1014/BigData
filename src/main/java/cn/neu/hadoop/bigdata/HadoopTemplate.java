@@ -41,17 +41,12 @@ public class HadoopTemplate {
         return fileSystem.exists(path);
     }
 
-    public String[] list(String path) throws IOException {
+    public FileStatus[] list(String path) throws IOException {
         return this.list(new Path(path));
     }
 
-    public String[] list(Path path) throws IOException {
-        RemoteIterator filename_iter = fileSystem.listFiles(path, false);
-        List<String> filename_list = new LinkedList<>();
-        while (filename_iter.hasNext()) {
-            filename_list.add(filename_iter.next().toString());
-        }
-        return (String[]) filename_list.toArray();
+    public FileStatus[] list(Path path) throws IOException {
+        return fileSystem.listStatus(path);
     }
 
     public void uploadFile(String srcFile) {

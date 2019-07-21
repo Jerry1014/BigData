@@ -1,6 +1,7 @@
 package cn.neu.hadoop.bigdata;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hadoop.fs.FileStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,17 @@ public class HadoopTemplateTest {
 
     @Test
     public void getFile() {
-        hadoopTemplate.download("/output4/part-r-00000","C:\\tem\\");
+        hadoopTemplate.download("/output4/part-r-00000", "C:\\tem\\");
+    }
+
+    @Test
+    public void list() throws IOException {
+        for (FileStatus i : hadoopTemplate.list("/test/0")) {
+            if(i.isDirectory()){
+                log.error("目录"+i.getPath());
+            }
+            else log.error("文件"+i.getPath());
+        }
     }
 
     @Test
