@@ -104,7 +104,7 @@ public class HadoopTemplateTest {
 
     @Test
     public void read() throws Exception {
-        hadoopTemplate.read(false, "/test/output3/part-r-00000");
+        hadoopTemplate.read(false, "/test/output_sp/part-r-00000");
     }
 
     @Test

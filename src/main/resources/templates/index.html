@@ -27,7 +27,7 @@
 <body>
 <div id="cur_working_path">
     <label>
-        <input v-model.lazy="path" style="border-style: none;width: auto">
+        <input v-model.lazy="path" style="border-style: none;width: 700px">
     </label>
 </div>
 <div id="button">
@@ -37,7 +37,6 @@
     <button v-on:click="my_analysis">分析</button>
 </div>
 <div id="views">
-    <p v-show="nothing">什么也没有</p>
     <ul v-if="showing_dir">
         <li v-for="a_view in dir_filename_list">
             <div>
@@ -80,8 +79,7 @@
         data: {
             dir_filename_list: null,
             showing_dir: true,
-            file_content: null,
-            nothing: false
+            file_content: null
         },
         methods: {
             testObject: function (e) {
@@ -92,22 +90,28 @@
         }
     });
 
-    cur_working_path.$watch('path', function (if_from_input) {
+    cur_working_path.$watch('path', function() {
         get_json_from_hdfs(cur_working_path.path);
     });
 
     function get_json_from_hdfs(path) {
-        axios.get('http://localhost:8080/t?path='+path)
+        axios.get('http://localhost:8080/fs?path=' + path)
             .then(function (response) {
-                if(response.status!==200){
-                    my_views.nothing = true;
+                console.log(response.data);
+                if (response.status !== 200 || response.data.status === 'wrong') {
                     my_views.showing_dir = false;
                     my_views.file_content = '出错';
-                }
-                else{
-                    my_views.nothing = false;
-                    my_views.showing_dir = true;
-                    my_views.dir_filename_list = response.data;
+                } else if (response.data.status === 'dir') {
+                    if (response.content === '') {
+                        my_views.showing_dir = false;
+                        my_views.file_content = '这里没有东西';
+                    } else {
+                        my_views.showing_dir = true;
+                        my_views.dir_filename_list = response.data.content;
+                    }
+                } else {
+                    my_views.showing_dir = false;
+                    my_views.file_content = response.data.content;
                 }
             })
     }
