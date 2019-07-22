@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+      xmlns:v-if="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>HDFS文件管理器</title>
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/axios.min.js"></script>
+
+    <style>
+        .base {
+            width: 100px;
+            height: 100px;
+        }
+
+        .file {
+            background: aqua;
+        }
+
+        .dir {
+            background: aquamarine;
+        }
+    </style>
+</head>
+<body>
+<div id="cur_working_path">
+    <label>
+        <input v-model.lazy="path" style="border-style: none;width: auto">
+    </label>
+</div>
+<div id="button">
+        <button v-on:click="my_upload">上传</button>
+        <button v-on:click="my_download">下载</button>
+        <button v-on:click="my_delete">删除</button>
+    <button v-on:click="my_analysis">分析</button>
+</div>
+<div id="views">
+    <ul>
+        <li v-for="a_view in dir_filename_list">
+            <div class="base"></div>
+            {{a_view.path}}
+        </li>
+    </ul>
+</div>
+
+<script>
+    var test = [{"path": "/test/input", "dir_or_file": "dir"}, {"path": "/test/test_output", "dir_or_file": "file"}];
+
+    var cur_working_path = new Vue({
+        el: '#cur_working_path',
+        data: {
+            path: '/'
+        }
+    });
+    var my_button = new Vue({
+        el: '#button',
+        methods: {
+            my_upload: function (event) {
+                alert('upload')
+            },
+            my_download: function (event) {
+                alert('download')
+            },
+            my_delete: function (event) {
+                alert('delete')
+            },
+            my_analysis: function (event) {
+                alert('analysis')
+            }
+        }
+    });
+    var my_views = new Vue({
+        el: '#views',
+        data: {
+            dir_filename_list: test
+        }
+    });
+</script>
+</body>
+</html>

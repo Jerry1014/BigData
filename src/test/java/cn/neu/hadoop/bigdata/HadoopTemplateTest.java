@@ -67,7 +67,7 @@ public class HadoopTemplateTest {
 
     @Test
     public void list() throws IOException {
-        for (FileStatus i : hadoopTemplate.list("/test/0")) {
+        for (FileStatus i : hadoopTemplate.list("/test")) {
             if(i.isDirectory()){
                 log.error("目录"+i.getPath());
             }
