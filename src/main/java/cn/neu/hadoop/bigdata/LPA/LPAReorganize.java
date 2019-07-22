@@ -31,6 +31,7 @@ public class LPAReorganize {
     public static class LPAReorganizePartitioner extends Partitioner<DesFloatWritable, Text> {
         HashMap<String, Integer> label_label_no = new HashMap<>();
         int next_no = 0;
+
         @Override
         public int getPartition(DesFloatWritable desFloatWritable, Text text, int i) {
             String[] label_name = text.toString().split("#");
