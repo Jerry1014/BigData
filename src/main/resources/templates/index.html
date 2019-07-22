@@ -9,16 +9,18 @@
 
     <style>
         .base {
-            width: 100px;
-            height: 100px;
+            width: 50px;
+            height: 50px;
         }
 
         .file {
-            background: aqua;
+            background-image: url(./image/direcory.png);
+            background-size: cover;
         }
 
         .dir {
-            background: aquamarine;
+            background-image: url(./image/file.png);
+            background-size: cover;
         }
     </style>
 </head>
@@ -29,18 +31,24 @@
     </label>
 </div>
 <div id="button">
-        <button v-on:click="my_upload">上传</button>
-        <button v-on:click="my_download">下载</button>
-        <button v-on:click="my_delete">删除</button>
+    <button v-on:click="my_upload">上传</button>
+    <button v-on:click="my_download">下载</button>
+    <button v-on:click="my_delete">删除</button>
     <button v-on:click="my_analysis">分析</button>
 </div>
 <div id="views">
-    <ul>
+    <p v-show="nothing">什么也没有</p>
+    <ul v-if="showing_dir">
         <li v-for="a_view in dir_filename_list">
-            <div class="base"></div>
-            {{a_view.path}}
+            <div>
+                <label><input type="checkbox"></label>
+                <div class="base" v-on:dblclick="cur_working_path.path=a_view.path"
+                     v-bind:class="testObject(a_view.dir_or_file)" title="{{a_view.path}}"></div>
+                <p>{{a_view.path}}</p>
+            </div>
         </li>
     </ul>
+    <p v-else>{{file_content}}</p>
 </div>
 
 <script>
@@ -72,9 +80,32 @@
     var my_views = new Vue({
         el: '#views',
         data: {
-            dir_filename_list: test
+            dir_filename_list: test,
+            showing_dir : true,
+            file_content : null,
+            nothing : false
+        },
+        methods: {
+            testObject: function (e) {
+                if (e === 'file')
+                    return {file: true};
+                else return {dir: true};
+            }
         }
     });
+
+    cur_working_path.$watch('path', function (if_from_input) {
+        get_json_from_hdfs(cur_working_path.path);
+    });
+
+    function get_json_from_hdfs(path) {
+        alert(path);
+        var tem;
+        //my_views.dir_filename_list = [{"path": "/test/input/a", "dir_or_file": "file"}];
+    }
+
+    // 默认会加载 / 根目录
+    get_json_from_hdfs('/');
 </script>
 </body>
 </html>
