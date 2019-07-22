@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>HDFS文件管理器</title>
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/axios.min.js"></script>
+</head>
+<body>
+<div id="cur_working_path">
+    <label>
+        <p>{{path}}</p>
+        <input v-model.lazy="path">
+    </label>
+</div>
+<div id="button"></div>
+<div id="view"></div>
+
+<script>
+    new Vue({
+        el: '#cur_working_path',
+        data: {
+            path: '/'
+        }
+    })
+</script>
+</body>
+</html>
