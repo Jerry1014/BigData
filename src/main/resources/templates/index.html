@@ -14,12 +14,12 @@
         }
 
         .file {
-            background-image: url(./image/direcory.png);
+            background-image: url(./image/file.png);
             background-size: cover;
         }
 
         .dir {
-            background-image: url(./image/file.png);
+            background-image: url(./image/direcory.png);
             background-size: cover;
         }
     </style>
@@ -52,8 +52,6 @@
 </div>
 
 <script>
-    var test = [{"path": "/test/input", "dir_or_file": "dir"}, {"path": "/test/test_output", "dir_or_file": "file"}];
-
     var cur_working_path = new Vue({
         el: '#cur_working_path',
         data: {
@@ -80,10 +78,10 @@
     var my_views = new Vue({
         el: '#views',
         data: {
-            dir_filename_list: test,
-            showing_dir : true,
-            file_content : null,
-            nothing : false
+            dir_filename_list: null,
+            showing_dir: true,
+            file_content: null,
+            nothing: false
         },
         methods: {
             testObject: function (e) {
@@ -99,9 +97,19 @@
     });
 
     function get_json_from_hdfs(path) {
-        alert(path);
-        var tem;
-        //my_views.dir_filename_list = [{"path": "/test/input/a", "dir_or_file": "file"}];
+        axios.get('http://localhost:8080/t?path='+path)
+            .then(function (response) {
+                if(response.status!==200){
+                    my_views.nothing = true;
+                    my_views.showing_dir = false;
+                    my_views.file_content = '出错';
+                }
+                else{
+                    my_views.nothing = false;
+                    my_views.showing_dir = true;
+                    my_views.dir_filename_list = response.data;
+                }
+            })
     }
 
     // 默认会加载 / 根目录
