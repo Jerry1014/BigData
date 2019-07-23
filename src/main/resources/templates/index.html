@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml"
-      xmlns:v-if="http://www.w3.org/1999/xhtml">
+>
 <head>
     <meta charset="utf-8">
     <title>HDFS文件管理器</title>
     <script src="./js/vue.min.js"></script>
     <script src="./js/axios.min.js"></script>
-
     <style>
         .base {
             width: 50px;
@@ -36,7 +35,22 @@
     <button v-on:click="my_makedir">新建文件夹</button>
     <button v-on:click="my_download">下载</button>
     <button v-on:click="my_delete">删除</button>
-    <button v-on:click="my_analysis">分析</button>
+    <div>
+        <ul>
+            <li v-for="a_method in method_list">
+                <input type="radio" name="method" v-bind:value="a_method" v-model="checked_method">{{a_method}}
+            </li>
+        </ul>
+        <button v-on:click="my_analysis">分析</button>
+    </div>
+    <div>
+        <ul>
+            <li v-for="a_chart in chart_list">
+                <input type="radio" name="chart" v-bind:value="a_chart" v-model="checked_chart">{{a_chart}}
+            </li>
+        </ul>
+        <button v-on:click="my_show_chart">结果可视化</button>
+    </div>
 </div>
 <div id="views">
     <ul v-if="showing_dir">
@@ -63,14 +77,18 @@
     var my_button = new Vue({
         el: '#button',
         data: {
-            tem_dir_name: null
+            tem_dir_name: null,
+            method_list: [],
+            chart_list: [],
+            checked_method: null,
+            checked_chart: null
         },
         methods: {
             my_upload: function (event) {
                 var reader = new FileReader();
                 reader.readAsText(event.target.files[0]);
                 reader.onload = function (ev) {
-                    axios.post('http://localhost:8080/upload', {
+                    axios.post(host + 'upload', {
                         'filepath': cur_working_path.path + event.target.files[0].name,
                         'content': this.result
                     }).then(function (response) {
@@ -82,7 +100,7 @@
                 }
             },
             my_makedir: function (event) {
-                axios.get('http://localhost:8080/mk?dir_name=' + cur_working_path.path + this.tem_dir_name)
+                axios.get(host + 'mk?dir_name=' + cur_working_path.path + this.tem_dir_name)
                     .then(function (response) {
                         get_json_from_hdfs(cur_working_path.path);
                         alert(response.data);
@@ -98,7 +116,7 @@
                 }
             },
             my_delete: function (event) {
-                axios.get('http://localhost:8080/rm?delete_list=' + my_views.check_list)
+                axios.get(host + 'rm?delete_list=' + my_views.check_list)
                     .then(function (response) {
                         get_json_from_hdfs(cur_working_path.path);
                         my_views.check_list = [];
@@ -108,7 +126,13 @@
                 });
             },
             my_analysis: function (event) {
-                alert('analysis')
+                alert("这个还没做")
+            },
+            my_show_chart: function (event) {
+                if (my_views.check_list.length !== 1 && this.checked_chart !== undefined) alert('只能选择一个文件且必须要选择一个用以分析的图表');
+                else {
+                    window.open(host + 'analysis?filename=' + my_views.check_list[0] + '&chart=' + this.checked_chart);
+                }
             }
         }
     });
@@ -136,10 +160,10 @@
     function get_json_from_hdfs(path) {
         my_views.check_list = [];
 
-        axios.get('http://localhost:8080/fs?path=' + path)
+        axios.get(host + 'fs?path=' + path)
             .then(function (response) {
                 console.log(response.data);
-                if (response.status !== 200 || response.data.status === 'wrong') {
+                if (response.data.status === 'wrong') {
                     my_views.showing_dir = false;
                     my_views.file_content = '出错  ' + response.data.content;
                 } else if (response.data.status === 'dir') {
@@ -157,6 +181,14 @@
             })
     }
 
+    // 初始化可选的分析方法
+    axios.get(host + 'get_all_method')
+        .then(function (response) {
+            my_button.method_list = response.data.all_analysis;
+            my_button.chart_list = response.data.all_charts;
+        }).catch(function (reason) {
+        alert('服务器连接失败');
+    });
     // 默认会加载 / 根目录
     get_json_from_hdfs('/');
 

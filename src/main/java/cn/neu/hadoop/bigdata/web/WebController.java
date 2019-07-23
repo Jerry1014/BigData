@@ -25,6 +25,8 @@ public class WebController {
     @Autowired
     private HadoopTemplate hadoopTemplate;
     private static String tem_file_save_path = "C:/tem/";
+    private String[] all_analysis = {"NameSplit", "NameCount"};
+    private String[] all_charts = {"WordCount"};
 
     @RequestMapping(value = "/")
     public String index() {
@@ -42,7 +44,6 @@ public class WebController {
                 if (if_dir) {
                     if (!hadoopTemplate.existsFile(path)) throw new Exception("文件不存在");
                     JsonArray dir_filename_list = new JsonArray();
-                    FileStatus[] test = hadoopTemplate.list(path);
                     for (FileStatus i : hadoopTemplate.list(path)) {
                         JsonObject tem = new JsonObject();
                         tem.addProperty("dir_or_file", i.isDirectory() ? "Dir" : "file");
@@ -58,7 +59,7 @@ public class WebController {
                 }
             } catch (Exception e) {
                 response_json.addProperty("status", "wrong");
-                response_json.addProperty("content", e.toString());
+                response_json.addProperty("content", e.getMessage());
             }
         } else {
             response_json.addProperty("status", "wrong");
@@ -74,7 +75,7 @@ public class WebController {
             hadoopTemplate.write(post_json.getString("filepath"), post_json.getString("content"));
             return "文件上传成功";
         } catch (Exception e) {
-            return "文件保存失败 " + e.toString();
+            return "文件保存失败 " + e.getMessage();
         }
     }
 
@@ -85,7 +86,7 @@ public class WebController {
             hadoopTemplate.existDir(path, true);
             return "文件夹创建成功";
         } catch (Exception e) {
-            return "文件夹创建失败 " + e.toString();
+            return "文件夹创建失败 " + e.getMessage();
         }
     }
 
@@ -98,7 +99,7 @@ public class WebController {
             }
             return "删除成功";
         } catch (Exception e) {
-            return "删除失败 " + e.toString();
+            return "删除失败 " + e.getMessage();
         }
     }
 
@@ -107,7 +108,9 @@ public class WebController {
         try {
             String download_filename = download_filename_path.substring(download_filename_path.lastIndexOf('/'));
             File file = new File(tem_file_save_path + download_filename);
-            if (!file.exists()) hadoopTemplate.download(download_filename_path, tem_file_save_path);
+            // 考虑到存在下载到旧文件的问题，待以后更新根据最后修改时间决定是否重新下载
+            // if (!file.exists()) hadoopTemplate.download(download_filename_path, tem_file_save_path);
+            hadoopTemplate.download(download_filename_path, tem_file_save_path);
 
             response.setContentType("application/force-download");// 设置强制下载不打开
             //response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
@@ -126,6 +129,80 @@ public class WebController {
             }
         } catch (Exception e) {
             log.error(e.toString());
+            response.setStatus(400);
         }
+    }
+
+    @RequestMapping(value = "/analysis")
+    public String analysis() {
+        return "analysis.html";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/get_all_method")
+    public String get_analysis_method() {
+        JsonObject response_json = new JsonObject();
+        JsonArray analysis_list = new JsonArray();
+        for (String i : all_analysis) {
+            analysis_list.add(i);
+        }
+        response_json.add("all_analysis", analysis_list);
+        JsonArray charts_list = new JsonArray();
+        for (String i : all_charts) {
+            charts_list.add(i);
+        }
+        response_json.add("all_charts", charts_list);
+        return response_json.toString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/echarts_json")
+    public String get_echarts_json(HttpServletResponse response, @RequestParam(name = "filepath") String filepath, @RequestParam(name = "chart") String method) {
+        JsonObject response_json = new JsonObject();
+        try {
+            String filename = filepath.substring(filepath.lastIndexOf('/'));
+
+            JsonObject title = new JsonObject();
+            title.addProperty("text", filename + ' ' + method);
+            response_json.add("title", title);
+            switch (method) {
+                case "WordCount":
+                    JsonObject tooltip = new JsonObject();
+                    response_json.add("tooltip", tooltip);
+                    JsonObject yAxis = new JsonObject();
+                    response_json.add("yAxis", yAxis);
+                    JsonObject legend = new JsonObject();
+                    JsonArray legend_data = new JsonArray();
+                    legend_data.add("次数");
+                    legend.add("data", legend_data);
+                    response_json.add("legend", legend);
+
+                    JsonArray xAxis_data = new JsonArray();
+                    JsonArray series_data = new JsonArray();
+                    String[] words = hadoopTemplate.read(true, filepath).split("\n");
+                    for (String i : words) {
+                        String[] name_count = i.split("\t");
+                        xAxis_data.add(name_count[0]);
+                        series_data.add(Integer.valueOf(name_count[1]));
+                    }
+                    JsonObject xAxis = new JsonObject();
+                    xAxis.add("data", xAxis_data);
+                    response_json.add("xAxis", xAxis);
+                    JsonArray series_list = new JsonArray();
+                    JsonObject series = new JsonObject();
+                    series.addProperty("name", "次数");
+                    series.addProperty("type", "bar");
+                    series.add("data", series_data);
+                    series_list.add(series);
+                    response_json.add("series", series_list);
+                    break;
+                default:
+                    throw new Exception("无此可视化图表");
+            }
+        } catch (Exception e) {
+            response.setStatus(400);
+            log.error(e.toString());
+        }
+        return response_json.toString();
     }
 }
