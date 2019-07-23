@@ -70,4 +70,15 @@ public class WebController {
             return "文件保存失败 " + e.toString();
         }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/mk")
+    public String mk(@RequestParam(name = "dir_name") String path) {
+        try {
+            hadoopTemplate.existDir(path, true);
+            return "文件夹创建成功";
+        } catch (Exception e) {
+            return "文件夹创建失败 " + e.toString();
+        }
+    }
 }

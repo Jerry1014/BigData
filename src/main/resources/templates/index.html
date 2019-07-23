@@ -32,6 +32,7 @@
 </div>
 <div id="button">
     <input type="file" v-on:change="my_upload">
+    <input type="text" v-model.lazy="tem_dir_name">
     <button v-on:click="my_makedir">新建文件夹</button>
     <button v-on:click="my_download">下载</button>
     <button v-on:click="my_delete">删除</button>
@@ -60,6 +61,9 @@
     });
     var my_button = new Vue({
         el: '#button',
+        data: {
+            tem_dir_name: null
+        },
         methods: {
             my_upload: function (event) {
                 var reader = new FileReader();
@@ -77,7 +81,13 @@
                 }
             },
             my_makedir: function (event) {
-
+                axios.get('http://localhost:8080/mk?dir_name=' + cur_working_path.path + this.tem_dir_name)
+                    .then(function (response) {
+                        get_json_from_hdfs(cur_working_path.path);
+                        alert(response.data);
+                    }).catch(function (reason) {
+                    alert('文件夹创建失败')
+                });
             },
             my_download: function (event) {
                 alert('download')
