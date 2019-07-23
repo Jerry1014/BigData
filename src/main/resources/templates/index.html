@@ -31,7 +31,8 @@
     </label>
 </div>
 <div id="button">
-    <button v-on:click="my_upload">上传</button>
+    <input type="file" v-on:change="my_upload">
+    <button v-on:click="my_makedir">新建文件夹</button>
     <button v-on:click="my_download">下载</button>
     <button v-on:click="my_delete">删除</button>
     <button v-on:click="my_analysis">分析</button>
@@ -61,7 +62,22 @@
         el: '#button',
         methods: {
             my_upload: function (event) {
-                alert('upload')
+                var reader = new FileReader();
+                reader.readAsText(event.target.files[0]);
+                reader.onload = function (ev) {
+                    axios.post('http://localhost:8080/upload', {
+                        'filepath': cur_working_path.path + event.target.files[0].name,
+                        'content': this.result
+                    }).then(function (response) {
+                        get_json_from_hdfs(cur_working_path.path);
+                        alert(response.data);
+                    }).catch(function (reason) {
+                        alert('文件上传失败')
+                    })
+                }
+            },
+            my_makedir: function (event) {
+
             },
             my_download: function (event) {
                 alert('download')
@@ -90,7 +106,7 @@
         }
     });
 
-    cur_working_path.$watch('path', function() {
+    cur_working_path.$watch('path', function () {
         get_json_from_hdfs(cur_working_path.path);
     });
 
@@ -100,7 +116,7 @@
                 console.log(response.data);
                 if (response.status !== 200 || response.data.status === 'wrong') {
                     my_views.showing_dir = false;
-                    my_views.file_content = '出错';
+                    my_views.file_content = '出错  ' + response.data.content;
                 } else if (response.data.status === 'dir') {
                     if (response.content === '') {
                         my_views.showing_dir = false;
@@ -118,6 +134,8 @@
 
     // 默认会加载 / 根目录
     get_json_from_hdfs('/');
+
+    // 按钮们的监听和处理
 </script>
 </body>
 </html>
