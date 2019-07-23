@@ -13,11 +13,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+
 @Controller
 @Slf4j
 public class WebController {
     @Autowired
     private HadoopTemplate hadoopTemplate;
+    private static String tem_file_save_path = "C:/tem/";
 
     @RequestMapping(value = "/")
     public String index() {
@@ -86,12 +93,39 @@ public class WebController {
     @RequestMapping(value = "/rm")
     public String rm(@RequestParam(name = "delete_list") String delete_list) {
         try {
-            for(String i:delete_list.split(",")){
+            for (String i : delete_list.split(",")) {
                 hadoopTemplate.my_rm(i);
             }
             return "删除成功";
         } catch (Exception e) {
             return "删除失败 " + e.toString();
+        }
+    }
+
+    @RequestMapping(value = "/download")
+    public void download(HttpServletResponse response, @RequestParam(name = "download_filename") String download_filename_path) {
+        try {
+            String download_filename = download_filename_path.substring(download_filename_path.lastIndexOf('/'));
+            File file = new File(tem_file_save_path + download_filename);
+            if (!file.exists()) hadoopTemplate.download(download_filename_path, tem_file_save_path);
+
+            response.setContentType("application/force-download");// 设置强制下载不打开
+            //response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+            //response.setContentType("multipart/form-data;charset=UTF-8");也可以明确的设置一下UTF-8，测试中不设置也可以。
+            response.setHeader("Content-Disposition", "attachment;fileName=" + new String(download_filename.getBytes("GB2312"), "ISO-8859-1"));
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = null;
+            BufferedInputStream bis = null;
+            fis = new FileInputStream(file);
+            bis = new BufferedInputStream(fis);
+            OutputStream os = response.getOutputStream();
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+        } catch (Exception e) {
+            log.error(e.toString());
         }
     }
 }

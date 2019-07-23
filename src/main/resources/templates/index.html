@@ -53,6 +53,7 @@
 </div>
 
 <script>
+    var host = 'http://localhost:8080/';
     var cur_working_path = new Vue({
         el: '#cur_working_path',
         data: {
@@ -90,12 +91,17 @@
                 });
             },
             my_download: function (event) {
-                alert('download')
+                var a = document.createElement('a');
+                for (var i in my_views.check_list) {
+                    a.href = host + 'download?download_filename=' + my_views.check_list[i];
+                    a.click();
+                }
             },
             my_delete: function (event) {
                 axios.get('http://localhost:8080/rm?delete_list=' + my_views.check_list)
                     .then(function (response) {
                         get_json_from_hdfs(cur_working_path.path);
+                        my_views.check_list = [];
                         alert(response.data);
                     }).catch(function (reason) {
                     alert('删除失败')
@@ -128,6 +134,8 @@
     });
 
     function get_json_from_hdfs(path) {
+        my_views.check_list = [];
+
         axios.get('http://localhost:8080/fs?path=' + path)
             .then(function (response) {
                 console.log(response.data);
