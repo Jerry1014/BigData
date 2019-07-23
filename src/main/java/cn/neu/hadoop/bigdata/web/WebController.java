@@ -81,4 +81,17 @@ public class WebController {
             return "文件夹创建失败 " + e.toString();
         }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/rm")
+    public String rm(@RequestParam(name = "delete_list") String delete_list) {
+        try {
+            for(String i:delete_list.split(",")){
+                hadoopTemplate.my_rm(i);
+            }
+            return "删除成功";
+        } catch (Exception e) {
+            return "删除失败 " + e.toString();
+        }
+    }
 }

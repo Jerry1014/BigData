@@ -42,9 +42,9 @@
     <ul v-if="showing_dir">
         <li v-for="a_view in dir_filename_list">
             <div>
-                <label><input type="checkbox"></label>
+                <label><input type="checkbox" v-model="check_list" v-bind:value="a_view.path"></label>
                 <div class="base" v-on:dblclick="cur_working_path.path=a_view.path"
-                     v-bind:class="testObject(a_view.dir_or_file)" title="{{a_view.path}}"></div>
+                     v-bind:class="testObject(a_view.dir_or_file)" v-bind:title="a_view.path"></div>
                 <p>{{a_view.path}}</p>
             </div>
         </li>
@@ -93,7 +93,13 @@
                 alert('download')
             },
             my_delete: function (event) {
-                alert('delete')
+                axios.get('http://localhost:8080/rm?delete_list=' + my_views.check_list)
+                    .then(function (response) {
+                        get_json_from_hdfs(cur_working_path.path);
+                        alert(response.data);
+                    }).catch(function (reason) {
+                    alert('删除失败')
+                });
             },
             my_analysis: function (event) {
                 alert('analysis')
@@ -105,7 +111,8 @@
         data: {
             dir_filename_list: null,
             showing_dir: true,
-            file_content: null
+            file_content: null,
+            check_list: []
         },
         methods: {
             testObject: function (e) {

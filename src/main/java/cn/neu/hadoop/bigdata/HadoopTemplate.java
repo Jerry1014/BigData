@@ -164,6 +164,20 @@ public class HadoopTemplate {
         }
     }
 
+    public void my_rm(String path) {
+        try {
+            // 返回FileSystem对象
+            if (StringUtils.isNotBlank(nameNode)) {
+                path = nameNode + path;
+            }
+            // 删除文件或者文件目录  delete(Path f) 此方法已经弃用
+            fileSystem.delete(new Path(path), true);
+        } catch (IllegalArgumentException | IOException e) {
+            log.error("", e);
+        }
+    }
+
+
     /**
      * 从 HDFS 下载文件
      *
