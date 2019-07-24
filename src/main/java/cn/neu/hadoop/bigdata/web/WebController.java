@@ -154,7 +154,14 @@ public class WebController {
         try {
             switch (method) {
                 case "NameSplit":
-                    NameSplit.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_ns", name_node, "");
+                    StringBuilder dict = new StringBuilder();
+                    for (FileStatus i : hadoopTemplate.list("/test/userdic")) {
+                        if (i.isFile()) {
+                            dict.append(hadoopTemplate.read(true, i.getPath().toString()));
+                            dict.append("\r\n");
+                        }
+                    }
+                    NameSplit.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_ns", name_node, dict.toString());
                     break;
                 case "NameCount":
                     NameCount.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_nc", name_node);
