@@ -7,7 +7,7 @@
     <script src="./js/axios.min.js"></script>
 </head>
 <body>
-<div id="main" style="width: 3600px;height: 1600px;"></div>
+<div id="main" style="width: 1200px;height: 800px;"></div>
 <script>
     var host = 'http://localhost:8080/';
     // 获取传递过来的filename参数
@@ -16,13 +16,16 @@
     var my_method = all_param[1].split('=')[1];
     var myChart = echarts.init(document.getElementById('main'));
     var option;
+    myChart.showLoading();
 
     axios.get(host + 'echarts_json?filepath=' + filepath + '&chart=' + my_method)
         .then(function (response) {
+            myChart.hideLoading();
             option = response.data;
             myChart.setOption(option);
         }).catch(function (reason) {
-        alert('失败')
+            console.log(reason)
+            alert('失败')
     });
 </script>
 </body>

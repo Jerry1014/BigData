@@ -18,6 +18,10 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -26,7 +30,7 @@ public class WebController {
     private HadoopTemplate hadoopTemplate;
     private static String tem_file_save_path = "C:/tem/";
     private String[] all_analysis = {"NameSplit", "NameCount"};
-    private String[] all_charts = {"WordCount"};
+    private String[] all_charts = {"WordCount", "Graph"};
 
     @RequestMapping(value = "/")
     public String index() {
@@ -165,10 +169,21 @@ public class WebController {
             JsonObject title = new JsonObject();
             title.addProperty("text", filename + ' ' + method);
             response_json.add("title", title);
+            JsonObject tooltip = new JsonObject();
+            response_json.add("tooltip", tooltip);
+
             switch (method) {
                 case "WordCount":
-                    JsonObject tooltip = new JsonObject();
-                    response_json.add("tooltip", tooltip);
+                    JsonArray dataZoom = new JsonArray();
+                    JsonObject dataZoom_x_inside = new JsonObject();
+                    dataZoom_x_inside.addProperty("type", "inside");
+                    dataZoom_x_inside.addProperty("xAxisIndex", 0);
+                    JsonObject dataZoom_y_inside = new JsonObject();
+                    dataZoom_y_inside.addProperty("type", "inside");
+                    dataZoom_y_inside.addProperty("yAxisIndex", 0);
+                    dataZoom.add(dataZoom_y_inside);
+                    dataZoom.add(dataZoom_x_inside);
+                    response_json.add("dataZoom", dataZoom);
                     JsonObject yAxis = new JsonObject();
                     response_json.add("yAxis", yAxis);
                     JsonObject legend = new JsonObject();
@@ -195,6 +210,46 @@ public class WebController {
                     series.add("data", series_data);
                     series_list.add(series);
                     response_json.add("series", series_list);
+                    break;
+                case "Graph":
+                    JsonObject g_series = new JsonObject();
+                    g_series.addProperty("layout", "force");
+                    g_series.addProperty("type", "graph");
+                    g_series.addProperty("roam", true);
+                    JsonArray g_nodes = new JsonArray();
+                    JsonArray g_links = new JsonArray();
+                    String[] g_words = hadoopTemplate.read(true, filepath).split("\n");
+                    HashSet<Integer> all_category = new HashSet<>();
+                    for (String i : g_words) {
+                        String[] label_and_name_point_relationship = i.split("\t");
+                        String[] name_and_point_and_relationship = label_and_name_point_relationship[1].split("#");
+                        JsonObject tem_node = new JsonObject();
+                        tem_node.addProperty("name", name_and_point_and_relationship[0]);
+                        tem_node.addProperty("category", Integer.valueOf(label_and_name_point_relationship[0]));
+                        all_category.add(Integer.valueOf(label_and_name_point_relationship[0]));
+                        tem_node.addProperty("value", Float.valueOf(name_and_point_and_relationship[1]));
+                        tem_node.addProperty("symbolSize", Float.valueOf(name_and_point_and_relationship[1]));
+                        g_nodes.add(tem_node);
+                        for (String j : name_and_point_and_relationship[2].split(";")) {
+                            String[] target_name_and_weight = j.split(":");
+                            JsonObject tem_link = new JsonObject();
+                            tem_link.addProperty("source", name_and_point_and_relationship[0]);
+                            tem_link.addProperty("target", target_name_and_weight[0]);
+                            g_links.add(tem_link);
+                        }
+                    }
+                    g_series.add("data", g_nodes);
+                    g_series.add("links", g_links);
+                    JsonArray categories = new JsonArray();
+                    for (int i = 0; i < all_category.size(); i++) {
+                        JsonObject tem_category = new JsonObject();
+                        tem_category.addProperty("name", String.valueOf(i));
+                        categories.add(tem_category);
+                    }
+                    g_series.add("categories", categories);
+                    JsonArray g_all_series = new JsonArray();
+                    g_all_series.add(g_series);
+                    response_json.add("series", g_all_series);
                     break;
                 default:
                     throw new Exception("无此可视化图表");
