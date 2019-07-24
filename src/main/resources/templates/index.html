@@ -7,11 +7,13 @@
     <script src="./js/vue.min.js"></script>
     <script src="./js/axios.min.js"></script>
     <style>
+        .dir_file_info{
+            display: inline-block;
+        }
         .base {
             width: 50px;
             height: 50px;
         }
-
         .file {
             background-image: url(./image/file.png);
             background-size: cover;
@@ -36,16 +38,16 @@
     <button v-on:click="my_download">下载</button>
     <button v-on:click="my_delete">删除</button>
     <div>
-        <ul>
-            <li v-for="a_method in method_list">
+        <ul style="list-style:none">
+            <li v-for="a_method in method_list" style="display:inline;">
                 <input type="radio" name="method" v-bind:value="a_method" v-model="checked_method">{{a_method}}
             </li>
         </ul>
         <button v-on:click="my_analysis">分析</button>
     </div>
     <div>
-        <ul>
-            <li v-for="a_chart in chart_list">
+        <ul style="list-style:none">
+            <li v-for="a_chart in chart_list" style="display:inline;">
                 <input type="radio" name="chart" v-bind:value="a_chart" v-model="checked_chart">{{a_chart}}
             </li>
         </ul>
@@ -53,13 +55,13 @@
     </div>
 </div>
 <div id="views">
-    <ul v-if="showing_dir">
+    <ul v-if="showing_dir" style="list-style:none">
         <li v-for="a_view in dir_filename_list">
             <div>
-                <label><input type="checkbox" v-model="check_list" v-bind:value="a_view.path"></label>
-                <div class="base" v-on:dblclick="cur_working_path.path=a_view.path"
+                <div class="dir_file_info"><input type="checkbox" v-model="check_list" v-bind:value="a_view.path"></div>
+                <div class="base dir_file_info" v-on:dblclick="cur_working_path.path=a_view.path"
                      v-bind:class="testObject(a_view.dir_or_file)" v-bind:title="a_view.path"></div>
-                <p>{{a_view.path}}</p>
+                <div class="dir_file_info"><p>{{a_view.path}}</p></div>
             </div>
         </li>
     </ul>
@@ -85,6 +87,7 @@
         },
         methods: {
             my_upload: function (event) {
+                alert("上传中");
                 var reader = new FileReader();
                 reader.readAsText(event.target.files[0]);
                 reader.onload = function (ev) {
@@ -116,6 +119,7 @@
                 }
             },
             my_delete: function (event) {
+                alert("删除中");
                 axios.get(host + 'rm?delete_list=' + my_views.check_list)
                     .then(function (response) {
                         get_json_from_hdfs(cur_working_path.path);
