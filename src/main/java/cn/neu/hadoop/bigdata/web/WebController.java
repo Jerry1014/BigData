@@ -137,9 +137,14 @@ public class WebController {
         }
     }
 
+    @RequestMapping(value = "/visualizing")
+    public String visualizing() {
+        return "visualizing.html";
+    }
+
     @RequestMapping(value = "/analysis")
     public String analysis() {
-        return "analysis.html";
+        return "visualizing.html";
     }
 
     @ResponseBody

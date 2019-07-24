@@ -131,7 +131,7 @@
             my_show_chart: function (event) {
                 if (my_views.check_list.length !== 1 && this.checked_chart !== undefined) alert('只能选择一个文件且必须要选择一个用以分析的图表');
                 else {
-                    window.open(host + 'analysis?filename=' + my_views.check_list[0] + '&chart=' + this.checked_chart);
+                    window.open(host + 'visualizing?filename=' + my_views.check_list[0] + '&chart=' + this.checked_chart);
                 }
             }
         }
