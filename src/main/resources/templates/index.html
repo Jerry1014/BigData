@@ -7,13 +7,15 @@
     <script src="./js/vue.min.js"></script>
     <script src="./js/axios.min.js"></script>
     <style>
-        .dir_file_info{
+        .dir_file_info {
             display: inline-block;
         }
+
         .base {
             width: 50px;
             height: 50px;
         }
+
         .file {
             background-image: url(./image/file.png);
             background-size: cover;
@@ -87,12 +89,11 @@
         },
         methods: {
             my_upload: function (event) {
-                alert("上传中");
                 var reader = new FileReader();
                 reader.readAsText(event.target.files[0]);
                 reader.onload = function (ev) {
                     axios.post(host + 'upload', {
-                        'filepath': cur_working_path.path + event.target.files[0].name,
+                        'filepath': cur_working_path.path + '/' + event.target.files[0].name,
                         'content': this.result
                     }).then(function (response) {
                         get_json_from_hdfs(cur_working_path.path);
@@ -100,10 +101,11 @@
                     }).catch(function (reason) {
                         alert('文件上传失败')
                     })
-                }
+                };
+                alert("上传中");
             },
             my_makedir: function (event) {
-                axios.get(host + 'mk?dir_name=' + cur_working_path.path + this.tem_dir_name)
+                axios.get(host + 'mk?dir_name=' + cur_working_path.path + '/' + this.tem_dir_name)
                     .then(function (response) {
                         get_json_from_hdfs(cur_working_path.path);
                         alert(response.data);
@@ -119,7 +121,7 @@
                 }
             },
             my_delete: function (event) {
-                alert("删除中");
+                alert("确认删除？" + my_views.check_list);
                 axios.get(host + 'rm?delete_list=' + my_views.check_list)
                     .then(function (response) {
                         get_json_from_hdfs(cur_working_path.path);
@@ -132,18 +134,18 @@
             my_analysis: function (event) {
                 if (my_views.check_list.length !== 1 && this.checked_method !== undefined) alert('只能选择一个文件/文件夹且必须要选择一个用以分析的方法');
                 else {
-                    alert("分析可能用时很长，甚至会超出超时设置，请耐心等待下一条弹框，进度条在未来实现");
                     axios.get(host + 'analysis?path=' + my_views.check_list[0] + '&method=' + this.checked_method)
                         .then(function (response) {
                             get_json_from_hdfs(cur_working_path.path);
                             my_views.check_list = [];
+                            get_json_from_hdfs(cur_working_path.path);
                             if (response.data.status === 'success') alert("完成");
                             else alert("失败，原因是 " + response.data.content);
-                            get_json_from_hdfs(cur_working_path.path);
                         }).catch(function (reason) {
                         console.log(reason);
                         alert('失败')
-                    })
+                    });
+                    alert("分析可能用时很长，甚至会超出超时设置，请耐心等待下一条弹框，进度条在未来实现");
                 }
             },
             my_show_chart: function (event) {
@@ -185,9 +187,9 @@
                     my_views.showing_dir = false;
                     my_views.file_content = '出错  ' + response.data.content;
                 } else if (response.data.status === 'dir') {
-                    if (response.content === '') {
+                    if (response.data.content.length === 0) {
                         my_views.showing_dir = false;
-                        my_views.file_content = '这里没有东西';
+                        my_views.file_content = '空空如也';
                     } else {
                         my_views.showing_dir = true;
                         my_views.dir_filename_list = response.data.content;

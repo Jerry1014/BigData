@@ -21,10 +21,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 
 @Controller
 @Slf4j
@@ -34,8 +31,8 @@ public class WebController {
     @Value("${hadoop.name-node}")
     private String name_node;
     private static String tem_file_save_path = "C:/tem/";
-    private String[] all_analysis = {"NameSplit", "NameCount", "RelationshipCount", "BuildRelationshipMap", "PageRankCompute", "LPACompute"};
-    private String[] all_charts = {"WordCount", "Graph"};
+    private String[] all_analysis = {"NameSplit", "WordCount", "NameCount", "RelationshipCount", "BuildRelationshipMap", "PageRankCompute", "LPACompute"};
+    private String[] all_charts = {"WordCount", "Graph", "WordCloud"};
 
     @RequestMapping(value = "/")
     public String index() {
@@ -162,6 +159,9 @@ public class WebController {
                         }
                     }
                     NameSplit.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_ns", name_node, dict.toString());
+                    break;
+                case "WordCount":
+                    WordCount.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_wc", name_node);
                     break;
                 case "NameCount":
                     NameCount.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_nc", name_node);
@@ -297,6 +297,44 @@ public class WebController {
                     JsonArray g_all_series = new JsonArray();
                     g_all_series.add(g_series);
                     response_json.add("series", g_all_series);
+                    break;
+                case "WordCloud":
+                    JsonObject w_series = new JsonObject();
+                    w_series.addProperty("type", "wordCloud");
+                    JsonArray text_rotation = new JsonArray();
+                    text_rotation.add(-45);
+                    text_rotation.add(0);
+                    text_rotation.add(45);
+                    text_rotation.add(90);
+                    w_series.add("textRotation", text_rotation);
+                    w_series.addProperty("textPadding", 0);
+                    JsonObject auto_size = new JsonObject();
+                    auto_size.addProperty("enable", true);
+                    auto_size.addProperty("minSize", 14);
+                    w_series.add("autoSize", auto_size);
+                    JsonArray w_size = new JsonArray();
+                    w_size.add("200%");
+                    w_size.add("200%");
+                    w_series.add("size", w_size);
+                    JsonArray w_data = new JsonArray();
+                    String[] w_words = hadoopTemplate.read(true, filepath).split("\n");
+                    for (int j = 0; j < 500 && j < w_words.length; j++) {
+                        String i = w_words[j];
+                        String[] value_word = i.split("\t");
+                        JsonObject tem_a_word = new JsonObject();
+                        tem_a_word.addProperty("name", value_word[1]);
+                        tem_a_word.addProperty("value", Float.valueOf(value_word[0]));
+                        JsonObject w_itemStyle = new JsonObject();
+                        JsonObject w_color = new JsonObject();
+                        w_color.addProperty("color", String.format("rgb(%d,%d,%d)", Math.round(Math.random() * 255), Math.round(Math.random() * 255), Math.round(Math.random() * 255)));
+                        w_itemStyle.add("normal", w_color);
+                        tem_a_word.add("itemStyle", w_itemStyle);
+                        w_data.add(tem_a_word);
+                    }
+                    w_series.add("data", w_data);
+                    JsonArray w_all_series = new JsonArray();
+                    w_all_series.add(w_series);
+                    response_json.add("series", w_all_series);
                     break;
                 default:
                     throw new Exception("无此可视化图表");
