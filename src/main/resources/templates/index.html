@@ -126,7 +126,21 @@
                 });
             },
             my_analysis: function (event) {
-                alert("这个还没做")
+                if (my_views.check_list.length !== 1 && this.checked_method !== undefined) alert('只能选择一个文件/文件夹且必须要选择一个用以分析的方法');
+                else {
+                    alert("分析可能用时很长，甚至会超出超时设置，请耐心等待下一条弹框，进度条在未来实现");
+                    axios.get(host + 'analysis?path=' + my_views.check_list[0] + '&method=' + this.checked_method)
+                        .then(function (response) {
+                            get_json_from_hdfs(cur_working_path.path);
+                            my_views.check_list = [];
+                            if (response.data.status === 'success') alert("完成");
+                            else alert("失败，原因是 " + response.data.content);
+                            get_json_from_hdfs(cur_working_path.path);
+                        }).catch(function (reason) {
+                        console.log(reason);
+                        alert('失败')
+                    })
+                }
             },
             my_show_chart: function (event) {
                 if (my_views.check_list.length !== 1 && this.checked_chart !== undefined) alert('只能选择一个文件且必须要选择一个用以分析的图表');

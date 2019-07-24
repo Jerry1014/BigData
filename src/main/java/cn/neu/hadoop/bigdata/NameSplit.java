@@ -35,7 +35,7 @@ public class NameSplit {
 
             for (Term i : terms) {
                 if (i.getNatureStr().equals("nr")) {
-                    if (name_set.contains(i.getName())) {
+                    if (name_set.isEmpty() || name_set.contains(i.getName())) {
                         long line_num = ((LongWritable) key).get();
                         context.write(new Text(((FileSplit) context.getInputSplit()).getPath().getName()
                                 + line_num), new Text(i.getName()));
@@ -61,8 +61,10 @@ public class NameSplit {
         // 构建所有人物的字典
         name_set.clear();
         for (String i : all_person_name.split("\r\n")) {
-            name_set.add(i);
-            DicLibrary.insert(DicLibrary.DEFAULT, i, "nr", DicLibrary.DEFAULT_FREQ);
+            if (!i.equals("")) {
+                name_set.add(i);
+                DicLibrary.insert(DicLibrary.DEFAULT, i, "nr", DicLibrary.DEFAULT_FREQ);
+            }
         }
 
         Job job = Job.getInstance();

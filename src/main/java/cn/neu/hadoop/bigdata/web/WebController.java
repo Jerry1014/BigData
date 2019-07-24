@@ -1,12 +1,15 @@
 package cn.neu.hadoop.bigdata.web;
 
-import cn.neu.hadoop.bigdata.HadoopTemplate;
+import cn.neu.hadoop.bigdata.*;
+import cn.neu.hadoop.bigdata.LPA.LPACompute;
+import cn.neu.hadoop.bigdata.pagerank.PageRankCompute;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.FileStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +31,10 @@ import java.util.List;
 public class WebController {
     @Autowired
     private HadoopTemplate hadoopTemplate;
+    @Value("${hadoop.name-node}")
+    private String name_node;
     private static String tem_file_save_path = "C:/tem/";
-    private String[] all_analysis = {"NameSplit", "NameCount"};
+    private String[] all_analysis = {"NameSplit", "NameCount", "RelationshipCount", "BuildRelationshipMap", "PageRankCompute", "LPACompute"};
     private String[] all_charts = {"WordCount", "Graph"};
 
     @RequestMapping(value = "/")
@@ -142,9 +147,39 @@ public class WebController {
         return "visualizing.html";
     }
 
+    @ResponseBody
     @RequestMapping(value = "/analysis")
-    public String analysis() {
-        return "visualizing.html";
+    public String analysis(@RequestParam(name = "path") String path, @RequestParam(name = "method") String method) {
+        JsonObject response_json = new JsonObject();
+        try {
+            switch (method) {
+                case "NameSplit":
+                    NameSplit.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_ns", name_node, "");
+                    break;
+                case "NameCount":
+                    NameCount.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_nc", name_node);
+                    break;
+                case "RelationshipCount":
+                    RelationshipCount.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_rc", name_node);
+                    break;
+                case "BuildRelationshipMap":
+                    BuildRelationshipMap.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_br", name_node);
+                    break;
+                case "PageRankCompute":
+                    PageRankCompute.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_pr", 10, name_node);
+                    break;
+                case "LPACompute":
+                    LPACompute.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_lpa", 6, name_node);
+                    break;
+                default:
+                    throw new Exception("无此方法");
+            }
+            response_json.addProperty("status", "success");
+        } catch (Exception e) {
+            response_json.addProperty("status", "wrong");
+            response_json.addProperty("content", e.getMessage());
+        }
+        return response_json.toString();
     }
 
     @ResponseBody
