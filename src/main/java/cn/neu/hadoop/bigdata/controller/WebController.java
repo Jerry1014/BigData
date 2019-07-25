@@ -34,6 +34,9 @@ public class WebController {
     private static String tem_file_save_path = "C:/tem/";
     private String[] all_analysis = {"NameSplit", "RelationshipCount", "BuildRelationshipMap", "PageRankCompute", "LPACompute", "NameCount", "WordCount", "WordTop"};
     private String[] all_charts = {"WordCount", "Graph", "WordCloud"};
+    private String[] my_color = {"#c23531", "#2f4554", "#61a0a8", "#d48265", "#91c7ae", "#749f83", "#ca8622",
+            "#bda29a", "#6e7074", "#546570", "#c4ccd3", "#FFFF00", "#FF83FA", "#D8BFD8", "#CDCDB4", "#CDBE70",
+            "#CD2990", "#C1FFC1", "#C0FF3E", "#8B2500", "#8B008B", "#6C7B8B", "#3A5FCD", "#000000"};
 
     @RequestMapping(value = "/")
     public String index() {
@@ -295,6 +298,11 @@ public class WebController {
                     JsonArray g_all_series = new JsonArray();
                     g_all_series.add(g_series);
                     response_json.add("series", g_all_series);
+                    JsonArray color = new JsonArray();
+                    for (String i : my_color) {
+                        color.add(i);
+                    }
+                    response_json.add("color", color);
                     break;
                 case "WordCloud":
                     JsonObject w_series = new JsonObject();
