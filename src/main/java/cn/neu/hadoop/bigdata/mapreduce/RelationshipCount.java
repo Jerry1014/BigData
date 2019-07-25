@@ -1,8 +1,5 @@
-package cn.neu.hadoop.bigdata;
+package cn.neu.hadoop.bigdata.mapreduce;
 
-import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.NLPTokenizer;
-import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -15,32 +12,27 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.List;
 
 @Component
 @Slf4j
-public class WordCount {
-    private static int word_time = 1;
-
-    public static class WordCountMapper extends Mapper<Object, Text, Text, IntWritable> {
+public class RelationshipCount {
+    public static class NameCountMapper extends Mapper<Object, Text, Text, IntWritable> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            List<Term> terms = NLPTokenizer.segment(value.toString());
-            for (Term i : terms) {
-                if (!i.word.equals("")) {
-                    String nature = i.nature.toString();
-                    if (nature.equals("v") || nature.equals("n")) {
-                        int num;
-                        if (word_time <= 0)
-                            num = 1;
-                        else num = (int) Math.pow(i.word.length(), word_time);
-                        context.write(new Text(i.word), new IntWritable(num));
-                    }
+            String[] all_name = value.toString().split(" ");
+            for (int i = 0; i < all_name.length; i++) {
+                String first_person = all_name[i];
+                for (int j = i + 1; j < all_name.length; j++) {
+                    String second_person = all_name[j];
+                    if (first_person.equals(second_person)) continue;
+                    if (first_person.compareTo(second_person) > 0)
+                        context.write(new Text(first_person + ',' + second_person), new IntWritable(1));
+                    else context.write(new Text(second_person + ',' + first_person), new IntWritable(1));
                 }
             }
         }
     }
 
-    public static class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class NameCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         public void reduce(Text key, Iterable<IntWritable> values, Context context)
                 throws IOException, InterruptedException {
             int sum = 0;
@@ -51,19 +43,17 @@ public class WordCount {
         }
     }
 
-
     public static void main(String in_path, String out_path, String name_node) throws IOException, InterruptedException, ClassNotFoundException {
         Job job = Job.getInstance();
-        job.setJarByClass(WordCount.class);
-        job.setMapperClass(WordCountMapper.class);
-        job.setCombinerClass(WordCountReducer.class);
-        job.setReducerClass(WordCountReducer.class);
+        job.setJarByClass(RelationshipCount.class);
+        job.setMapperClass(NameCountMapper.class);
+        job.setCombinerClass(RelationshipCount.NameCountReducer.class);
+        job.setReducerClass(RelationshipCount.NameCountReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
-        job.setNumReduceTasks(1);//设置reduce的个数
+        job.setNumReduceTasks(1);
         FileInputFormat.addInputPath(job, new Path(name_node + in_path));
         FileOutputFormat.setOutputPath(job, new Path(name_node + out_path));
         job.waitForCompletion(true);
     }
 }
-

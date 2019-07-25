@@ -1,8 +1,9 @@
-package cn.neu.hadoop.bigdata.web;
+package cn.neu.hadoop.bigdata.controller;
 
-import cn.neu.hadoop.bigdata.*;
-import cn.neu.hadoop.bigdata.LPA.LPACompute;
-import cn.neu.hadoop.bigdata.pagerank.PageRankCompute;
+import cn.neu.hadoop.bigdata.hadoop.HadoopTemplate;
+import cn.neu.hadoop.bigdata.mapreduce.*;
+import cn.neu.hadoop.bigdata.mapreduce.LPA.LPACompute;
+import cn.neu.hadoop.bigdata.mapreduce.pagerank.PageRankCompute;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

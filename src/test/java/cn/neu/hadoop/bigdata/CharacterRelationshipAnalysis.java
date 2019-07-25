@@ -1,7 +1,12 @@
 package cn.neu.hadoop.bigdata;
 
-import cn.neu.hadoop.bigdata.LPA.LPACompute;
-import cn.neu.hadoop.bigdata.pagerank.PageRankCompute;
+import cn.neu.hadoop.bigdata.hadoop.HadoopTemplate;
+import cn.neu.hadoop.bigdata.mapreduce.BuildRelationshipMap;
+import cn.neu.hadoop.bigdata.mapreduce.LPA.LPACompute;
+import cn.neu.hadoop.bigdata.mapreduce.NameCount;
+import cn.neu.hadoop.bigdata.mapreduce.NameSplit;
+import cn.neu.hadoop.bigdata.mapreduce.RelationshipCount;
+import cn.neu.hadoop.bigdata.mapreduce.pagerank.PageRankCompute;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

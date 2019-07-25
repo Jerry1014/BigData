@@ -1,4 +1,4 @@
-package cn.neu.hadoop.bigdata.userdefineddatatypes;
+package cn.neu.hadoop.bigdata.mapreduce.mydatatypes;
 
 import org.apache.hadoop.io.IntWritable;
 

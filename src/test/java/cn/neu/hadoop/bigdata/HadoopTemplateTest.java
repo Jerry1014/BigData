@@ -1,5 +1,6 @@
 package cn.neu.hadoop.bigdata;
 
+import cn.neu.hadoop.bigdata.hadoop.HadoopTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.FileStatus;
 import org.junit.Test;

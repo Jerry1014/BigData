@@ -1,6 +1,6 @@
-package cn.neu.hadoop.bigdata.pagerank;
+package cn.neu.hadoop.bigdata.mapreduce.pagerank;
 
-import cn.neu.hadoop.bigdata.NameSplit;
+import cn.neu.hadoop.bigdata.mapreduce.NameSplit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
