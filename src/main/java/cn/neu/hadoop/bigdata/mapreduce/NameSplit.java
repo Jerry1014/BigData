@@ -1,11 +1,8 @@
 package cn.neu.hadoop.bigdata.mapreduce;
 
+import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.NLPTokenizer;
 import lombok.extern.slf4j.Slf4j;
-import org.ansj.domain.Result;
-import org.ansj.domain.Term;
-import org.ansj.library.DicLibrary;
-import org.ansj.recognition.impl.NatureRecognition;
-import org.ansj.splitWord.analysis.ToAnalysis;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
@@ -29,17 +26,13 @@ public class NameSplit {
 
     public static class NameLineMapper extends Mapper<Object, Text, Text, Text> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            Result tem = ToAnalysis.parse(value.toString());
-            new NatureRecognition().recognition(tem);
-            List<Term> terms = tem.getTerms();
+            List<Term> terms = NLPTokenizer.segment(value.toString());
 
             for (Term i : terms) {
-                if (i.getNatureStr().equals("nr")) {
-                    if (name_set.isEmpty() || name_set.contains(i.getName())) {
-                        long line_num = ((LongWritable) key).get();
-                        context.write(new Text(((FileSplit) context.getInputSplit()).getPath().getName()
-                                + line_num), new Text(i.getName()));
-                    }
+                if (!i.word.equals("") && i.nature.toString().equals("nr")) {
+                    long line_num = ((LongWritable) key).get();
+                    context.write(new Text(((FileSplit) context.getInputSplit()).getPath().getName()
+                            + line_num), new Text(i.word));
                 }
             }
         }
@@ -57,16 +50,8 @@ public class NameSplit {
         }
     }
 
-    public static void main(String in_path, String out_path, String name_node, String all_person_name) throws IOException, InterruptedException, ClassNotFoundException {
+    public static void main(String in_path, String out_path, String name_node) throws IOException, InterruptedException, ClassNotFoundException {
         // 构建所有人物的字典
-        name_set.clear();
-        for (String i : all_person_name.split("\r\n")) {
-            if (!i.equals("")) {
-                name_set.add(i);
-                DicLibrary.insert(DicLibrary.DEFAULT, i, "nr", DicLibrary.DEFAULT_FREQ);
-            }
-        }
-
         Job job = Job.getInstance();
         job.setJarByClass(NameSplit.class);
         job.setMapperClass(NameLineMapper.class);

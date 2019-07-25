@@ -1,7 +1,9 @@
 package cn.neu.hadoop.bigdata.mapreduce;
 
+import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.NLPTokenizer;
+import com.hankcs.hanlp.tokenizer.SpeedTokenizer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -23,18 +25,22 @@ public class WordCount {
 
     public static class WordCountMapper extends Mapper<Object, Text, Text, IntWritable> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            List<Term> terms = NLPTokenizer.segment(value.toString());
-            for (Term i : terms) {
-                if (!i.word.equals("")) {
-                    String nature = i.nature.toString();
-                    if (nature.equals("v") || nature.equals("n")) {
-                        int num;
-                        if (word_time <= 0)
-                            num = 1;
-                        else num = (int) Math.pow(i.word.length(), word_time);
-                        context.write(new Text(i.word), new IntWritable(num));
-                    }
-                }
+//            List<Term> terms = SpeedTokenizer.segment(value.toString());
+//            for (Term i : terms) {
+//                if (!i.word.equals("")) {
+//                    String nature = i.nature.toString();
+//                    if (nature.equals("v") || nature.equals("n")) {
+//                        int num;
+//                        if (word_time <= 0)
+//                            num = 1;
+//                        else num = (int) Math.pow(i.word.length(), word_time);
+//                        context.write(new Text(i.word), new IntWritable(num));
+//                    }
+//                }
+//            }
+            List<String> terms = HanLP.extractKeyword(value.toString(),2);
+            for(String i:terms){
+                if(!"".equals(i)) context.write(new Text(i), new IntWritable(1));
             }
         }
     }

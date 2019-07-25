@@ -49,7 +49,7 @@ public class CharacterRelationshipAnalysis {
         clear_output_directory(name_split_output_path);
         hadoopTemplate.uploadFile(source_all_person_name_file_path, all_person_name_file_path + all_person_filename);
         String all_person_name = hadoopTemplate.read(true, all_person_name_file_path + all_person_filename);
-        NameSplit.main(hadoop_source_data_path, name_split_output_path, name_node, all_person_name);
+        NameSplit.main(hadoop_source_data_path, name_split_output_path, name_node);
 
         clear_output_directory(name_count_output_path);
         NameCount.main(name_split_output_path, name_count_output_path, name_node);
@@ -76,7 +76,7 @@ public class CharacterRelationshipAnalysis {
     public void name_split() throws Exception {
         clear_output_directory(name_split_output_path);
         String all_person_name = hadoopTemplate.read(true, all_person_name_file_path + '/' + all_person_filename);
-        NameSplit.main(hadoop_source_data_path, name_split_output_path, name_node, all_person_name);
+        NameSplit.main(hadoop_source_data_path, name_split_output_path, name_node);
         print_and_download_result(name_split_output_path);
     }
 

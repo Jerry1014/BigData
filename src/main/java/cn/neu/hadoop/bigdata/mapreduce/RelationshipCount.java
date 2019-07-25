@@ -18,12 +18,12 @@ import java.io.IOException;
 public class RelationshipCount {
     public static class NameCountMapper extends Mapper<Object, Text, Text, IntWritable> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            String[] all_name = value.toString().split(" ");
+            String[] all_name = value.toString().split("[ ]+");
             for (int i = 0; i < all_name.length; i++) {
                 String first_person = all_name[i];
                 for (int j = i + 1; j < all_name.length; j++) {
                     String second_person = all_name[j];
-                    if (first_person.equals(second_person)) continue;
+                    if (first_person.equals(second_person) || first_person.equals("") || second_person.equals("")) continue;
                     if (first_person.compareTo(second_person) > 0)
                         context.write(new Text(first_person + ',' + second_person), new IntWritable(1));
                     else context.write(new Text(second_person + ',' + first_person), new IntWritable(1));

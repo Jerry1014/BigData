@@ -152,14 +152,7 @@ public class WebController {
         try {
             switch (method) {
                 case "NameSplit":
-                    StringBuilder dict = new StringBuilder();
-                    for (FileStatus i : hadoopTemplate.list("/test/userdic")) {
-                        if (i.isFile()) {
-                            dict.append(hadoopTemplate.read(true, i.getPath().toString()));
-                            dict.append("\r\n");
-                        }
-                    }
-                    NameSplit.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_ns", name_node, dict.toString());
+                    NameSplit.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_ns", name_node);
                     break;
                 case "WordCount":
                     WordCount.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_wc", name_node);
@@ -267,6 +260,7 @@ public class WebController {
                     g_series.addProperty("layout", "force");
                     g_series.addProperty("type", "graph");
                     g_series.addProperty("roam", true);
+                    g_series.addProperty("focusNodeAdjacency", true);
                     JsonArray g_nodes = new JsonArray();
                     JsonArray g_links = new JsonArray();
                     String[] g_words = hadoopTemplate.read(true, filepath).split("\n");
