@@ -140,8 +140,8 @@ public class WebController {
     }
 
     @RequestMapping(value = "/visualizing")
-    public String visualizing( @RequestParam(name = "chart") String method) {
-        return method.equals("WordCloud")?"visualizing-wordcloud.html":"visualizing.html";
+    public String visualizing(@RequestParam(name = "chart") String method) {
+        return method.equals("WordCloud") ? "visualizing-wordcloud.html" : "visualizing.html";
     }
 
     @ResponseBody
