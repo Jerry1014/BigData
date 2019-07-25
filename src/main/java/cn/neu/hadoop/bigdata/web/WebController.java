@@ -31,7 +31,7 @@ public class WebController {
     @Value("${hadoop.name-node}")
     private String name_node;
     private static String tem_file_save_path = "C:/tem/";
-    private String[] all_analysis = {"NameSplit", "WordCount", "NameCount", "RelationshipCount", "BuildRelationshipMap", "PageRankCompute", "LPACompute"};
+    private String[] all_analysis = {"NameSplit", "RelationshipCount", "BuildRelationshipMap", "PageRankCompute", "LPACompute", "NameCount", "WordCount", "WordTop"};
     private String[] all_charts = {"WordCount", "Graph", "WordCloud"};
 
     @RequestMapping(value = "/")
@@ -140,8 +140,8 @@ public class WebController {
     }
 
     @RequestMapping(value = "/visualizing")
-    public String visualizing() {
-        return "visualizing.html";
+    public String visualizing( @RequestParam(name = "chart") String method) {
+        return method.equals("WordCloud")?"visualizing-wordcloud.html":"visualizing.html";
     }
 
     @ResponseBody
@@ -177,6 +177,9 @@ public class WebController {
                     break;
                 case "LPACompute":
                     LPACompute.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_lpa", 6, name_node);
+                    break;
+                case "WordTop":
+                    WordTop.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_wt", name_node);
                     break;
                 default:
                     throw new Exception("无此方法");
@@ -310,15 +313,15 @@ public class WebController {
                     w_series.addProperty("textPadding", 0);
                     JsonObject auto_size = new JsonObject();
                     auto_size.addProperty("enable", true);
-                    auto_size.addProperty("minSize", 14);
+                    auto_size.addProperty("minSize", 10);
                     w_series.add("autoSize", auto_size);
                     JsonArray w_size = new JsonArray();
-                    w_size.add("200%");
-                    w_size.add("200%");
+                    w_size.add("80%");
+                    w_size.add("80%");
                     w_series.add("size", w_size);
                     JsonArray w_data = new JsonArray();
                     String[] w_words = hadoopTemplate.read(true, filepath).split("\n");
-                    for (int j = 0; j < 500 && j < w_words.length; j++) {
+                    for (int j = 0; j < 300 && j < w_words.length; j++) {
                         String i = w_words[j];
                         String[] value_word = i.split("\t");
                         JsonObject tem_a_word = new JsonObject();

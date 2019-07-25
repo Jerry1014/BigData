@@ -1,10 +1,10 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("echarts"));
+		module.exports = factory(require("static/js/echarts"));
 	else if(typeof define === 'function' && define.amd)
-		define(["echarts"], factory);
+		define(["static/js/echarts"], factory);
 	else if(typeof exports === 'object')
-		exports["echarts-wordcloud"] = factory(require("echarts"));
+		exports["echarts-wordcloud"] = factory(require("static/js/echarts"));
 	else
 		root["echarts-wordcloud"] = factory(root["echarts"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_7__) {
