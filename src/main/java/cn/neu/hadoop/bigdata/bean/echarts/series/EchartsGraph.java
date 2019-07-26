@@ -1,17 +1,17 @@
 package cn.neu.hadoop.bigdata.bean.echarts.series;
 
-import cn.neu.hadoop.bigdata.bean.echarts.series.EchartsSeriesBase;
-import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphCategoryList;
-import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphLinkList;
-import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphNodeList;
+import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphCategory;
+import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphLink;
+import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphNode;
 
 public class EchartsGraph extends EchartsSeriesBase {
     private String layout;
     private boolean roam;
     private boolean focusNodeAdjacency;
-    private EchartsGraphNodeList echartsGraphNodeList;
-    private EchartsGraphLinkList echartsGraphLinkList;
-    private EchartsGraphCategoryList echartsGraphCategoryList;
+    private EchartsGraphNode[] nodes;
+    private EchartsGraphLink[] links;
+    private EchartsGraphCategory[] Categories;
+    private String type = "graph";
 
     public String getLayout() {
         return layout;
@@ -37,27 +37,35 @@ public class EchartsGraph extends EchartsSeriesBase {
         this.focusNodeAdjacency = focusNodeAdjacency;
     }
 
-    public EchartsGraphNodeList getEchartsGraphNodeList() {
-        return echartsGraphNodeList;
+    public EchartsGraphNode[] getNodes() {
+        return nodes;
     }
 
-    public void setEchartsGraphNodeList(EchartsGraphNodeList echartsGraphNodeList) {
-        this.echartsGraphNodeList = echartsGraphNodeList;
+    public void setNodes(EchartsGraphNode[] nodes) {
+        this.nodes = nodes;
     }
 
-    public EchartsGraphLinkList getEchartsGraphLinkList() {
-        return echartsGraphLinkList;
+    public EchartsGraphLink[] getLinks() {
+        return links;
     }
 
-    public void setEchartsGraphLinkList(EchartsGraphLinkList echartsGraphLinkList) {
-        this.echartsGraphLinkList = echartsGraphLinkList;
+    public void setLinks(EchartsGraphLink[] links) {
+        this.links = links;
     }
 
-    public EchartsGraphCategoryList getEchartsGraphCategoryList() {
-        return echartsGraphCategoryList;
+    public EchartsGraphCategory[] getCategories() {
+        return Categories;
     }
 
-    public void setEchartsGraphCategoryList(EchartsGraphCategoryList echartsGraphCategoryList) {
-        this.echartsGraphCategoryList = echartsGraphCategoryList;
+    public void setCategories(EchartsGraphCategory[] categories) {
+        Categories = categories;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

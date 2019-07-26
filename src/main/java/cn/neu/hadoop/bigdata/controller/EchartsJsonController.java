@@ -3,6 +3,7 @@ package cn.neu.hadoop.bigdata.controller;
 import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionBar;
 import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionBase;
 import cn.neu.hadoop.bigdata.service.VisulizationService;
+import cn.neu.hadoop.bigdata.service.impl.VisulizationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class EchartsJsonController {
     @Autowired
-    VisulizationService visulizationService;
+    VisulizationServiceImpl visulizationService;
 
     @ResponseBody
     @RequestMapping(value = "/test")
@@ -22,7 +23,7 @@ public class EchartsJsonController {
         try {
             switch (method) {
                 case "WordCount":
-                    return visulizationService.get_echarts_bar_json(filepath, method);
+                    return visulizationService.get_echarts_bar_json(filepath);
                 case "Graph":
                     break;
                 case "WordCloud":

@@ -1,22 +1,22 @@
 package cn.neu.hadoop.bigdata.bean.echarts.series.graph;
 
 public class EchartsGraphLink {
-    private int source;
-    private int target;
+    private String source;
+    private String target;
 
-    public int getSource() {
+    public String getSource() {
         return source;
     }
 
-    public void setSource(int source) {
+    public void setSource(String source) {
         this.source = source;
     }
 
-    public int getTarget() {
+    public String getTarget() {
         return target;
     }
 
-    public void setTarget(int target) {
+    public void setTarget(String target) {
         this.target = target;
     }
 }
