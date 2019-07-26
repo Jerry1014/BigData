@@ -18,7 +18,7 @@
     var option;
     myChart.showLoading();
 
-    axios.get('test?filepath=' + filepath + '&chart=' + my_method)
+    axios.get('echarts_json?filepath=' + filepath + '&chart=' + my_method)
         .then(function (response) {
             myChart.hideLoading();
             option = response.data;

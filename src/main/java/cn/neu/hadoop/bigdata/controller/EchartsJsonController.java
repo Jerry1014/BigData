@@ -18,7 +18,7 @@ public class EchartsJsonController {
     VisulizationServiceImpl visulizationService;
 
     @ResponseBody
-    @RequestMapping(value = "/test")
+    @RequestMapping(value = "/echarts_json")
     public EchartsOptionBase get_echarts_json(HttpServletResponse response, @RequestParam(name = "filepath") String filepath, @RequestParam(name = "chart") String method) {
         try {
             switch (method) {
