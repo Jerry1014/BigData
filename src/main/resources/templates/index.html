@@ -71,7 +71,6 @@
 </div>
 
 <script>
-    var host = 'http://localhost:8080/';
     var cur_working_path = new Vue({
         el: '#cur_working_path',
         data: {
@@ -92,7 +91,7 @@
                 var reader = new FileReader();
                 reader.readAsText(event.target.files[0]);
                 reader.onload = function (ev) {
-                    axios.post(host + 'upload', {
+                    axios.post('fs/upload', {
                         'filepath': cur_working_path.path + '/' + event.target.files[0].name,
                         'content': this.result
                     }).then(function (response) {
@@ -105,7 +104,7 @@
                 alert("上传中");
             },
             my_makedir: function (event) {
-                axios.get(host + 'mk?dir_name=' + cur_working_path.path + '/' + this.tem_dir_name)
+                axios.get('fs/mk?dir_name=' + cur_working_path.path + '/' + this.tem_dir_name)
                     .then(function (response) {
                         get_json_from_hdfs(cur_working_path.path);
                         alert(response.data);
@@ -116,13 +115,13 @@
             my_download: function (event) {
                 var a = document.createElement('a');
                 for (var i in my_views.check_list) {
-                    a.href = host + 'download?download_filename=' + my_views.check_list[i];
+                    a.href = 'fs/download?download_filename=' + my_views.check_list[i];
                     a.click();
                 }
             },
             my_delete: function (event) {
                 alert("确认删除？" + my_views.check_list);
-                axios.get(host + 'rm?delete_list=' + my_views.check_list)
+                axios.get('fs/rm?delete_list=' + my_views.check_list)
                     .then(function (response) {
                         get_json_from_hdfs(cur_working_path.path);
                         my_views.check_list = [];
@@ -134,7 +133,7 @@
             my_analysis: function (event) {
                 if (my_views.check_list.length !== 1 && this.checked_method !== undefined) alert('只能选择一个文件/文件夹且必须要选择一个用以分析的方法');
                 else {
-                    axios.get(host + 'analysis?path=' + my_views.check_list[0] + '&method=' + this.checked_method)
+                    axios.get('analysis?path=' + my_views.check_list[0] + '&method=' + this.checked_method)
                         .then(function (response) {
                             get_json_from_hdfs(cur_working_path.path);
                             my_views.check_list = [];
@@ -151,7 +150,7 @@
             my_show_chart: function (event) {
                 if (my_views.check_list.length !== 1 && this.checked_chart !== undefined) alert('只能选择一个文件且必须要选择一个用以分析的图表');
                 else {
-                    window.open(host + 'visualizing?filename=' + my_views.check_list[0] + '&chart=' + this.checked_chart);
+                    window.open('visualizing?filename=' + my_views.check_list[0] + '&chart=' + this.checked_chart);
                 }
             }
         }
@@ -180,7 +179,7 @@
     function get_json_from_hdfs(path) {
         my_views.check_list = [];
 
-        axios.get(host + 'fs?path=' + path)
+        axios.get('fs/list?path=' + path)
             .then(function (response) {
                 console.log(response.data);
                 if (response.data.status === 'wrong') {
@@ -202,7 +201,7 @@
     }
 
     // 初始化可选的分析方法
-    axios.get(host + 'get_all_method')
+    axios.get('get_all_method')
         .then(function (response) {
             my_button.method_list = response.data.all_analysis;
             my_button.chart_list = response.data.all_charts;
