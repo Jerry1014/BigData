@@ -24,9 +24,6 @@ public class VisulizationServiceImpl implements VisulizationService {
     @Autowired
     HadoopTemplate hadoopTemplate;
 
-    private String[] my_color = {"#c23531", "#2f4554", "#61a0a8", "#d48265", "#91c7ae", "#749f83", "#ca8622",
-            "#bda29a", "#6e7074", "#546570", "#c4ccd3", "#FFFF00", "#FF83FA", "#D8BFD8", "#CDCDB4", "#CDBE70",
-            "#CD2990", "#C1FFC1", "#C0FF3E", "#8B2500", "#8B008B", "#6C7B8B", "#3A5FCD", "#000000"};
 
     @Override
     public EchartsOptionBar get_echarts_bar_json(String filepath) throws Exception {
@@ -78,9 +75,10 @@ public class VisulizationServiceImpl implements VisulizationService {
         EchartsOptionGraph echartsOptionGraph = new EchartsOptionGraph();
 
         EchartsTitle echartsTitle = new EchartsTitle();
-        echartsTitle.setText(filepath + " Grape");
+        echartsTitle.setText(filepath + " Graph");
         echartsTitle.setShow(true);
         echartsOptionGraph.setTitle(echartsTitle);
+        echartsOptionGraph.setTooltip(new EchartsTooltip());
 
         EchartsGraph echartsGraph = new EchartsGraph();
         echartsGraph.setLayout("force");
@@ -109,8 +107,12 @@ public class VisulizationServiceImpl implements VisulizationService {
                 tem_link_list.add(tem_link);
             }
         }
-        echartsGraph.setNodes((EchartsGraphNode[]) tem_node_list.toArray());
-        echartsGraph.setLinks((EchartsGraphLink[]) tem_link_list.toArray());
+        EchartsGraphNode[] tem_node_trans_list = new EchartsGraphNode[tem_node_list.size()];
+        tem_node_list.toArray(tem_node_trans_list);
+        echartsGraph.setNodes(tem_node_trans_list);
+        EchartsGraphLink[] tem_link_trans_list = new EchartsGraphLink[tem_link_list.size()];
+        tem_link_list.toArray(tem_link_trans_list);
+        echartsGraph.setLinks(tem_link_trans_list);
 
         List<EchartsGraphCategory> tem_category_list = new LinkedList<>();
         for (int i = 0; i < all_category.size(); i++) {
@@ -118,13 +120,15 @@ public class VisulizationServiceImpl implements VisulizationService {
             tem_category.setName(String.valueOf(i));
             tem_category_list.add(tem_category);
         }
-        echartsGraph.setCategories((EchartsGraphCategory[]) tem_category_list.toArray());
-
-        return null;
+        EchartsGraphCategory[] tem_trans_category_list = new EchartsGraphCategory[tem_category_list.size()];
+        tem_category_list.toArray(tem_trans_category_list);
+        echartsGraph.setCategories(tem_trans_category_list);
+        echartsOptionGraph.setSeries(new EchartsGraph[]{echartsGraph});
+        return echartsOptionGraph;
     }
 
     @Override
     public EchartsOptionWordcloud get_echarts_wordcount_json(String filepath) {
-        return null;
+        return new EchartsOptionWordcloud();
     }
 }

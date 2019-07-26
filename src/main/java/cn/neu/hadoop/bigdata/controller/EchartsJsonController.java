@@ -25,9 +25,9 @@ public class EchartsJsonController {
                 case "WordCount":
                     return visulizationService.get_echarts_bar_json(filepath);
                 case "Graph":
-                    break;
+                    return visulizationService.get_echarts_graph_json(filepath);
                 case "WordCloud":
-                    break;
+                    return visulizationService.get_echarts_wordcount_json(filepath);
                 default:
                     throw new Exception("无此可视化图表");
             }
