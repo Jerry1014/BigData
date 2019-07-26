@@ -1,5 +1,6 @@
 package cn.neu.hadoop.bigdata.service.impl;
 
+import cn.neu.hadoop.bigdata.service.InitOptions;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

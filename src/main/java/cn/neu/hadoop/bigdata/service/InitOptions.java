@@ -1,4 +1,4 @@
-package cn.neu.hadoop.bigdata.service.impl;
+package cn.neu.hadoop.bigdata.service;
 
 import java.util.Map;
 
