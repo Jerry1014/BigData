@@ -97,7 +97,9 @@ public class VisulizationServiceImpl implements VisulizationService {
             int category = Integer.parseInt(label_and_name_point_relationship[0]);
             tem_node.setCategory(category);
             all_category.add(category);
-            tem_node.setValue(Float.parseFloat(name_and_point_and_relationship[1]));
+            float point = Float.parseFloat(name_and_point_and_relationship[1]);
+            tem_node.setValue(point);
+            tem_node.setSymbolSize(point);
             tem_node_list.add(tem_node);
             for (String j : name_and_point_and_relationship[2].split(";")) {
                 String[] target_name_and_weight = j.split(":");
@@ -129,6 +131,13 @@ public class VisulizationServiceImpl implements VisulizationService {
 
     @Override
     public EchartsOptionWordcloud get_echarts_wordcount_json(String filepath) {
-        return new EchartsOptionWordcloud();
+        EchartsOptionWordcloud echartsOptionWordcloud = new EchartsOptionWordcloud();
+
+        EchartsTitle echartsTitle = new EchartsTitle();
+        echartsTitle.setText(filepath + " WordCloud");
+        echartsTitle.setShow(true);
+        echartsOptionWordcloud.setTitle(echartsTitle);
+        echartsOptionWordcloud.setTooltip(new EchartsTooltip());
+
     }
 }

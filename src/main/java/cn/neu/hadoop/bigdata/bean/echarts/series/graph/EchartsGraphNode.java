@@ -4,6 +4,7 @@ public class EchartsGraphNode {
     private String name;
     private int category;
     private float value;
+    private float symbolSize;
 
     public String getName() {
         return name;
@@ -27,5 +28,13 @@ public class EchartsGraphNode {
 
     public void setValue(float value) {
         this.value = value;
+    }
+
+    public float getSymbolSize() {
+        return symbolSize;
+    }
+
+    public void setSymbolSize(float symbolSize) {
+        this.symbolSize = symbolSize;
     }
 }
