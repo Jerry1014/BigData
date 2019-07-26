@@ -9,7 +9,6 @@
 <body>
 <div id="main" style="width: 1200px;height: 800px;"></div>
 <script>
-    var host = 'http://localhost:8080/';
     // 获取传递过来的filename参数
     var all_param = window.location.search.substring(1).split("&");
     var filepath = all_param[0].split('=')[1];
@@ -18,7 +17,7 @@
     var option;
     myChart.showLoading();
 
-    axios.get(host + 'echarts_json?filepath=' + filepath + '&chart=' + my_method)
+    axios.get('echarts_json?filepath=' + filepath + '&chart=' + my_method)
         .then(function (response) {
             myChart.hideLoading();
             option = response.data;
