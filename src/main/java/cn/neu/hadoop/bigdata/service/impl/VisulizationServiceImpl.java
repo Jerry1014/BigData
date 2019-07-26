@@ -7,14 +7,20 @@ import cn.neu.hadoop.bigdata.bean.echarts.common.*;
 import cn.neu.hadoop.bigdata.bean.echarts.series.EchartsBar;
 import cn.neu.hadoop.bigdata.bean.echarts.series.EchartsGraph;
 import cn.neu.hadoop.bigdata.bean.echarts.series.EchartsSeriesBase;
+import cn.neu.hadoop.bigdata.bean.echarts.series.EchartsWordCloud;
 import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphCategory;
 import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphLink;
 import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphNode;
+import cn.neu.hadoop.bigdata.bean.echarts.series.wordcloud.EchartsWordCloudAData;
+import cn.neu.hadoop.bigdata.bean.echarts.series.wordcloud.EchartsWordCloudColor;
+import cn.neu.hadoop.bigdata.bean.echarts.series.wordcloud.EchartsWordCloudItemStyle;
+import cn.neu.hadoop.bigdata.bean.echarts.series.wordcloud.EchartsWordcloudAutoSize;
 import cn.neu.hadoop.bigdata.hadoop.HadoopTemplate;
 import cn.neu.hadoop.bigdata.service.VisulizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -130,7 +136,7 @@ public class VisulizationServiceImpl implements VisulizationService {
     }
 
     @Override
-    public EchartsOptionWordcloud get_echarts_wordcount_json(String filepath) {
+    public EchartsOptionWordcloud get_echarts_wordcount_json(String filepath) throws Exception {
         EchartsOptionWordcloud echartsOptionWordcloud = new EchartsOptionWordcloud();
 
         EchartsTitle echartsTitle = new EchartsTitle();
@@ -139,5 +145,27 @@ public class VisulizationServiceImpl implements VisulizationService {
         echartsOptionWordcloud.setTitle(echartsTitle);
         echartsOptionWordcloud.setTooltip(new EchartsTooltip());
 
+        EchartsWordCloud echartsWordCloud = new EchartsWordCloud();
+        echartsWordCloud.setAutoSize(new EchartsWordcloudAutoSize());
+        String[] w_words = hadoopTemplate.read(true, filepath).split("\n");
+        List<EchartsWordCloudAData> dataList = new ArrayList<>();
+        for (int j = 0; j < 300 && j < w_words.length; j++) {
+            String i = w_words[j];
+            String[] value_word = i.split("\t");
+
+            EchartsWordCloudAData tem_data = new EchartsWordCloudAData();
+            tem_data.setName(value_word[1]);
+            tem_data.setValue(Float.parseFloat(value_word[0]));
+            EchartsWordCloudItemStyle echartsWordCloudItemStyle = new EchartsWordCloudItemStyle();
+            EchartsWordCloudColor tem_color = new EchartsWordCloudColor();
+            tem_color.setColor(String.format("rgb(%d,%d,%d)", Math.round(Math.random() * 255), Math.round(Math.random()
+                    * 255), Math.round(Math.random() * 255)));
+            echartsWordCloudItemStyle.setNormal(tem_color);
+            tem_data.setItemStyle(echartsWordCloudItemStyle);
+            dataList.add(tem_data);
+        }
+        echartsWordCloud.setData((EchartsWordCloudAData[]) dataList.toArray());
+        echartsOptionWordcloud.setSeries(new EchartsSeriesBase[]{echartsWordCloud});
+        return echartsOptionWordcloud;
     }
 }
