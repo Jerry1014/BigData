@@ -2,7 +2,7 @@ package cn.neu.hadoop.bigdata.bean.echarts.series.wordcloud;
 
 public class EchartsWordcloudAutoSize {
     private boolean enable = true;
-    private int minSize = 14;
+    private int minSize = 10;
 
     public boolean isEnable() {
         return enable;

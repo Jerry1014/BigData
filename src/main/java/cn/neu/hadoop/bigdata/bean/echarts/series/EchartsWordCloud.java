@@ -5,7 +5,7 @@ import cn.neu.hadoop.bigdata.bean.echarts.series.wordcloud.EchartsWordcloudAutoS
 
 public class EchartsWordCloud extends EchartsSeriesBase {
     private String type = "wordCloud";
-    private String[] size = {"80%", "%80"};
+    private String[] size = {"90%", "90%"};
     private int[] textRotation = {0, 45, 90, -45};
     private EchartsWordcloudAutoSize autoSize;
     private EchartsWordCloudAData[] data;

@@ -4,6 +4,7 @@ import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionBar;
 import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionBase;
 import cn.neu.hadoop.bigdata.service.VisulizationService;
 import cn.neu.hadoop.bigdata.service.impl.VisulizationServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
+@Slf4j
 public class EchartsJsonController {
     @Autowired
     VisulizationServiceImpl visulizationService;
@@ -33,7 +35,7 @@ public class EchartsJsonController {
             }
         } catch (Exception e) {
             response.setStatus(400);
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return null;
     }

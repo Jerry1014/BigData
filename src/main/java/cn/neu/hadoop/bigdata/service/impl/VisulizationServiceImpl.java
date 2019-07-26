@@ -148,7 +148,7 @@ public class VisulizationServiceImpl implements VisulizationService {
         EchartsWordCloud echartsWordCloud = new EchartsWordCloud();
         echartsWordCloud.setAutoSize(new EchartsWordcloudAutoSize());
         String[] w_words = hadoopTemplate.read(true, filepath).split("\n");
-        List<EchartsWordCloudAData> dataList = new ArrayList<>();
+        List<EchartsWordCloudAData> dataList = new LinkedList<>();
         for (int j = 0; j < 300 && j < w_words.length; j++) {
             String i = w_words[j];
             String[] value_word = i.split("\t");
@@ -164,7 +164,9 @@ public class VisulizationServiceImpl implements VisulizationService {
             tem_data.setItemStyle(echartsWordCloudItemStyle);
             dataList.add(tem_data);
         }
-        echartsWordCloud.setData((EchartsWordCloudAData[]) dataList.toArray());
+        EchartsWordCloudAData[] tem_trans_data_list = new EchartsWordCloudAData[dataList.size()];
+        dataList.toArray(tem_trans_data_list);
+        echartsWordCloud.setData(tem_trans_data_list);
         echartsOptionWordcloud.setSeries(new EchartsSeriesBase[]{echartsWordCloud});
         return echartsOptionWordcloud;
     }
