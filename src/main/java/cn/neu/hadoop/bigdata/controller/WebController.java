@@ -38,28 +38,6 @@ public class WebController {
             "#bda29a", "#6e7074", "#546570", "#c4ccd3", "#FFFF00", "#FF83FA", "#D8BFD8", "#CDCDB4", "#CDBE70",
             "#CD2990", "#C1FFC1", "#C0FF3E", "#8B2500", "#8B008B", "#6C7B8B", "#3A5FCD", "#000000"};
 
-    @RequestMapping(value = "/visualizing")
-    public String visualizing(@RequestParam(name = "chart") String method) {
-        return method.equals("WordCloud") ? "visualizing-wordcloud.html" : "visualizing.html";
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/get_all_method")
-    public String get_analysis_method() {
-        JsonObject response_json = new JsonObject();
-        JsonArray analysis_list = new JsonArray();
-        for (String i : all_analysis) {
-            analysis_list.add(i);
-        }
-        response_json.add("all_analysis", analysis_list);
-        JsonArray charts_list = new JsonArray();
-        for (String i : all_charts) {
-            charts_list.add(i);
-        }
-        response_json.add("all_charts", charts_list);
-        return response_json.toString();
-    }
-
     @ResponseBody
     @RequestMapping(value = "/echarts_json")
     public String get_echarts_json(HttpServletResponse response, @RequestParam(name = "filepath") String filepath, @RequestParam(name = "chart") String method) {
