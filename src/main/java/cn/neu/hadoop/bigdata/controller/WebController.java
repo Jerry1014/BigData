@@ -44,47 +44,6 @@ public class WebController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/analysis")
-    public String analysis(@RequestParam(name = "path") String path, @RequestParam(name = "method") String method) {
-        JsonObject response_json = new JsonObject();
-        try {
-            switch (method) {
-                case "NameSplit":
-                    NameSplit.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_ns", name_node);
-                    break;
-                case "WordCount":
-                    WordCount.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_wc", name_node);
-                    break;
-                case "NameCount":
-                    NameCount.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_nc", name_node);
-                    break;
-                case "RelationshipCount":
-                    RelationshipCount.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_rc", name_node);
-                    break;
-                case "BuildRelationshipMap":
-                    BuildRelationshipMap.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_br", name_node);
-                    break;
-                case "PageRankCompute":
-                    PageRankCompute.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_pr", 10, name_node);
-                    break;
-                case "LPACompute":
-                    LPACompute.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_lpa", 6, name_node);
-                    break;
-                case "WordTop":
-                    WordTop.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_wt", name_node);
-                    break;
-                default:
-                    throw new Exception("无此方法");
-            }
-            response_json.addProperty("status", "success");
-        } catch (Exception e) {
-            response_json.addProperty("status", "wrong");
-            response_json.addProperty("content", e.getMessage());
-        }
-        return response_json.toString();
-    }
-
-    @ResponseBody
     @RequestMapping(value = "/get_all_method")
     public String get_analysis_method() {
         JsonObject response_json = new JsonObject();
@@ -242,7 +201,7 @@ public class WebController {
             }
         } catch (Exception e) {
             response.setStatus(400);
-            log.error(e.toString());
+            e.printStackTrace();
         }
         return response_json.toString();
     }
