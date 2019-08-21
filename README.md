@@ -28,8 +28,8 @@
    ![Image text](../others/image/website.png)
    - 使用charts.js完成mapreduce结果的可视化
         - 词语计数
-        ![Image text](../others/image/wordcount.png)
+        ![Image text](./others/image/wordcount.png)
         - 生成词云
-        ![Image text](../others/image/wordcloud.jpg)
+        ![Image text](./others/image/wordcloud.jpg)
         - 生成关系图
-        ![Image text](../others/image/graph.png)
+        ![Image text](./others/image/graph.png)
