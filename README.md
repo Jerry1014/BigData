@@ -25,7 +25,7 @@
            - 词语计数排序 WordCloud
            
    - 通过网站对HDFS中的文件进行管理
-   ![Image text](../others/image/website.png)
+   ![Image text](./others/image/website.png)
    - 使用charts.js完成mapreduce结果的可视化
         - 词语计数
         ![Image text](./others/image/wordcount.png)
