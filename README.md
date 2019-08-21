@@ -19,7 +19,7 @@
                 - 迭代更新标签 LPAIteration
                 - 按标签进行分区，并根据PR值进行排序 LPAReorganize
        - 歌词分析
-       - 源数据：通过QQ音乐爬取歌词(others/LrcCrawler.py)
+       - 源数据：通过QQ音乐爬取歌词(./others/LrcCrawler.py)
        - MapReduce实现
            - 词语计数 WordCount
            - 词语计数排序 WordCloud
@@ -29,7 +29,7 @@
    - 使用charts.js完成mapreduce结果的可视化
         - 词语计数
         ![Image text](./others/image/wordcount.png)
-        - 生成词云
+        - 生成词云 （此处为林夕歌词）
         ![Image text](./others/image/wordcloud.jpg)
-        - 生成关系图
+        - 生成关系图 （此处为金庸全部小说的人物关系聚类）
         ![Image text](./others/image/graph.png)
