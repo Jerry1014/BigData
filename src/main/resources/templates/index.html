@@ -7,6 +7,14 @@
     <script src="./js/vue.min.js"></script>
     <script src="./js/axios.min.js"></script>
     <style>
+        #path{
+            height: 35px;
+            width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 3px; /*css3属性IE不支持*/
+            box-shadow: 0 2px #999;
+            padding: 1px 1px 1px 5px;
+        }
         .dir_file_info {
             display: inline-block;
         }
@@ -28,9 +36,9 @@
     </style>
 </head>
 <body>
-<div id="cur_working_path">
+<div id="cur_working_path" style="margin: 10px">
     <label>
-        <input v-model.lazy="path" style="border-style: none;width: 700px">
+        <input v-model.lazy="path" id="path">
     </label>
 </div>
 <div id="button">
