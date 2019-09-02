@@ -54,6 +54,9 @@ public class MapReduceServiceImpl implements MapReduceService {
                 case "WordTop":
                     WordTop.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_wt", name_node);
                     break;
+                case "FundAnalysis":
+                    FundAnalysis.main(path, path.substring(0, path.lastIndexOf('/')) + "/output_fa", name_node);
+                    break;
                 default:
                     throw new Exception("无此方法");
             }

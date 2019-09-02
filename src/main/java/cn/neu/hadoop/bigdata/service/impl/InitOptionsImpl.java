@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Service
 public class InitOptionsImpl implements InitOptions {
-    private String[] all_analysis = {"NameSplit", "RelationshipCount", "BuildRelationshipMap", "PageRankCompute", "LPACompute", "NameCount", "WordCount", "WordTop"};
+    private String[] all_analysis = {"NameSplit", "RelationshipCount", "BuildRelationshipMap", "PageRankCompute", "LPACompute", "NameCount", "WordCount", "WordTop", "FundAnalysis"};
     private String[] all_charts = {"WordCount", "Graph", "WordCloud"};
 
     @Override

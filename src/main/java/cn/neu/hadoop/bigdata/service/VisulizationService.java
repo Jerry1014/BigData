@@ -2,6 +2,7 @@ package cn.neu.hadoop.bigdata.service;
 
 import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionBar;
 import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionGraph;
+import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionPie;
 import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionWordcloud;
 
 public interface VisulizationService {
@@ -10,4 +11,6 @@ public interface VisulizationService {
     EchartsOptionGraph get_echarts_graph_json(String filepath) throws Exception;
 
     EchartsOptionWordcloud get_echarts_wordcount_json(String filepath) throws Exception;
+
+    EchartsOptionPie get_echarts_pie_json(String filepath) throws Exception;
 }
