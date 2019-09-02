@@ -4,8 +4,8 @@ import cn.neu.hadoop.bigdata.bean.echarts.series.pie.EchartsPieData;
 
 public class EchartsPie extends EchartsSeriesBase {
     private String type = "pie";
-    private String roseType = "radius";
-    private EchartsPieData[] echartsPieData;
+    // private String roseType = "radius";
+    private EchartsPieData[] data;
 
     public String getType() {
         return type;
@@ -15,19 +15,19 @@ public class EchartsPie extends EchartsSeriesBase {
         this.type = type;
     }
 
-    public String getRoseType() {
-        return roseType;
+//    public String getRoseType() {
+//        return roseType;
+//    }
+//
+//    public void setRoseType(String roseType) {
+//        this.roseType = roseType;
+//    }
+
+    public EchartsPieData[] getData() {
+        return data;
     }
 
-    public void setRoseType(String roseType) {
-        this.roseType = roseType;
-    }
-
-    public EchartsPieData[] getEchartsPieData() {
-        return echartsPieData;
-    }
-
-    public void setEchartsPieData(EchartsPieData[] echartsPieData) {
-        this.echartsPieData = echartsPieData;
+    public void setData(EchartsPieData[] data) {
+        this.data = data;
     }
 }

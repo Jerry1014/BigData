@@ -30,6 +30,8 @@ public class EchartsJsonController {
                     return visulizationService.get_echarts_graph_json(filepath);
                 case "WordCloud":
                     return visulizationService.get_echarts_wordcount_json(filepath);
+                case "Pie":
+                    return visulizationService.get_echarts_pie_json(filepath);
                 default:
                     throw new Exception("无此可视化图表");
             }

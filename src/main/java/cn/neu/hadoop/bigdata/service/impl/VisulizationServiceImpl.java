@@ -185,13 +185,13 @@ public class VisulizationServiceImpl implements VisulizationService {
         for (String i : f_words) {
             String[] name_value = i.split("\t");
             EchartsPieData echartsPieData = new EchartsPieData();
-            echartsPieData.setName(name_value[0] + '-' + Integer.valueOf(name_value[0]) + 1);
+            echartsPieData.setName(name_value[0] + '-' + (Integer.parseInt(name_value[0]) + 1));
             echartsPieData.setValue(name_value[1]);
             echartsPieDataList.add(echartsPieData);
         }
         EchartsPieData[] tem_trans_data_list = new EchartsPieData[echartsPieDataList.size()];
         echartsPieDataList.toArray(tem_trans_data_list);
-        echartsPie.setEchartsPieData(tem_trans_data_list);
+        echartsPie.setData(tem_trans_data_list);
 
         echartsOptionPie.setSeries(new EchartsSeriesBase[]{echartsPie});
         return echartsOptionPie;
