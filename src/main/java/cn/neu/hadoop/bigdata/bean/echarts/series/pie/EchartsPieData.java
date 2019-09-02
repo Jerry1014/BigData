@@ -1,13 +1,22 @@
 package cn.neu.hadoop.bigdata.bean.echarts.series.pie;
 
 public class EchartsPieData {
-    private EchartsPieAData[] echartsPieAData;
+    private String name;
+    private String value;
 
-    public EchartsPieAData[] getEchartsPieAData() {
-        return echartsPieAData;
+    public String getName() {
+        return name;
     }
 
-    public void setEchartsPieAData(EchartsPieAData[] echartsPieAData) {
-        this.echartsPieAData = echartsPieAData;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }

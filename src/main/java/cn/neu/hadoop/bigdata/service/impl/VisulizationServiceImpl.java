@@ -2,15 +2,14 @@ package cn.neu.hadoop.bigdata.service.impl;
 
 import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionBar;
 import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionGraph;
+import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionPie;
 import cn.neu.hadoop.bigdata.bean.echarts.EchartsOptionWordcloud;
 import cn.neu.hadoop.bigdata.bean.echarts.common.*;
-import cn.neu.hadoop.bigdata.bean.echarts.series.EchartsBar;
-import cn.neu.hadoop.bigdata.bean.echarts.series.EchartsGraph;
-import cn.neu.hadoop.bigdata.bean.echarts.series.EchartsSeriesBase;
-import cn.neu.hadoop.bigdata.bean.echarts.series.EchartsWordCloud;
+import cn.neu.hadoop.bigdata.bean.echarts.series.*;
 import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphCategory;
 import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphLink;
 import cn.neu.hadoop.bigdata.bean.echarts.series.graph.EchartsGraphNode;
+import cn.neu.hadoop.bigdata.bean.echarts.series.pie.EchartsPieData;
 import cn.neu.hadoop.bigdata.bean.echarts.series.wordcloud.EchartsWordCloudAData;
 import cn.neu.hadoop.bigdata.bean.echarts.series.wordcloud.EchartsWordCloudColor;
 import cn.neu.hadoop.bigdata.bean.echarts.series.wordcloud.EchartsWordCloudItemStyle;
@@ -20,7 +19,6 @@ import cn.neu.hadoop.bigdata.service.VisulizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -169,5 +167,33 @@ public class VisulizationServiceImpl implements VisulizationService {
         echartsWordCloud.setData(tem_trans_data_list);
         echartsOptionWordcloud.setSeries(new EchartsSeriesBase[]{echartsWordCloud});
         return echartsOptionWordcloud;
+    }
+
+    @Override
+    public EchartsOptionPie get_echarts_pie_json(String filepath) throws Exception {
+        EchartsOptionPie echartsOptionPie = new EchartsOptionPie();
+
+        EchartsTitle echartsTitle = new EchartsTitle();
+        echartsTitle.setText(filepath + "FundAnalysis");
+        echartsTitle.setShow(true);
+        echartsOptionPie.setTitle(echartsTitle);
+        echartsOptionPie.setTooltip(new EchartsTooltip());
+
+        EchartsPie echartsPie = new EchartsPie();
+        String[] f_words = hadoopTemplate.read(true, filepath).split("\n");
+        List<EchartsPieData> echartsPieDataList = new LinkedList<EchartsPieData>();
+        for (String i : f_words) {
+            String[] name_value = i.split("\t");
+            EchartsPieData echartsPieData = new EchartsPieData();
+            echartsPieData.setName(name_value[0] + '-' + Integer.valueOf(name_value[0]) + 1);
+            echartsPieData.setValue(name_value[1]);
+            echartsPieDataList.add(echartsPieData);
+        }
+        EchartsPieData[] tem_trans_data_list = new EchartsPieData[echartsPieDataList.size()];
+        echartsPieDataList.toArray(tem_trans_data_list);
+        echartsPie.setEchartsPieData(tem_trans_data_list);
+
+        echartsOptionPie.setSeries(new EchartsSeriesBase[]{echartsPie});
+        return echartsOptionPie;
     }
 }
