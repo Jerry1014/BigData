@@ -7,7 +7,6 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -18,35 +17,18 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class FundAnalysis {
-    public static class AllIncomeMapper extends Mapper<Object, Text, IntWritable, Text> {
+    public static class MonthlyIncomeClassificationMapper extends Mapper<Object, Text, IntWritable, IntWritable> {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             if (((LongWritable) key).get() != 0) {
-                String[] income_str = value.toString().split(",");
-                for (int i = 2; i < 7; i++) {
-                    String income = income_str[i];
-                    if (income.length() < 3) return;
-                    context.write(new IntWritable(i - 2), new Text(income.substring(0, income.length() - 1)));
-                }
+                String income_str = value.toString().split(",")[2];
+                if (income_str.length() < 3) return;
+                int income = (int) Math.floor(Double.parseDouble(income_str.substring(1, income_str.length() - 1)));
+                context.write(new IntWritable(income), new IntWritable(1));
             }
         }
     }
 
-    public static class AllIncomePartitioner extends Partitioner<IntWritable, Text> {
-        @Override
-        public int getPartition(IntWritable intWritable, Text text, int i) {
-            return intWritable.get();
-        }
-    }
-
-    public static class AllIncomeCombiner extends Reducer<IntWritable, Text, IntWritable, IntWritable> {
-        public void reduce(IntWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-            for (Text i : values) {
-                context.write(new IntWritable(Integer.parseInt(i.toString())), new IntWritable(1));
-            }
-        }
-    }
-
-    public static class IncomeClassificationReducer extends Reducer<IntWritable, IntWritable, IntWritable, IntWritable> {
+    public static class MonthlyIncomeClassificationReducer extends Reducer<IntWritable, IntWritable, IntWritable, IntWritable> {
         public void reduce(IntWritable key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
             int sum = 0;
             for (IntWritable i : values) {
@@ -59,9 +41,9 @@ public class FundAnalysis {
     public static void main(String in_path, String out_path, String name_node) throws IOException, ClassNotFoundException, InterruptedException {
         Job job = Job.getInstance();
         job.setJarByClass(FundAnalysis.class);
-        job.setMapperClass(AllIncomeMapper.class);
-        job.setCombinerClass(AllIncomeCombiner.class);
-        job.setReducerClass(IncomeClassificationReducer.class);
+        job.setMapperClass(MonthlyIncomeClassificationMapper.class);
+        job.setCombinerClass(MonthlyIncomeClassificationReducer.class);
+        job.setReducerClass(MonthlyIncomeClassificationReducer.class);
         job.setOutputKeyClass(IntWritable.class);
         job.setOutputValueClass(IntWritable.class);
         job.setNumReduceTasks(1);//设置reduce的个数
