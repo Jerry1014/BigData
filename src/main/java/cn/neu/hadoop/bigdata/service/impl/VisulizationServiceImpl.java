@@ -185,7 +185,7 @@ public class VisulizationServiceImpl implements VisulizationService {
         for (String i : f_words) {
             String[] name_value = i.split("\t");
             EchartsPieData echartsPieData = new EchartsPieData();
-            echartsPieData.setName(name_value[0] + '-' + (Integer.parseInt(name_value[0]) + 1));
+            echartsPieData.setName(name_value[0] + " ~ " + (Integer.parseInt(name_value[0]) + 1));
             echartsPieData.setValue(name_value[1]);
             echartsPieDataList.add(echartsPieData);
         }

@@ -22,7 +22,7 @@ public class FundAnalysis {
             if (((LongWritable) key).get() != 0) {
                 String income_str = value.toString().split(",")[2];
                 if (income_str.length() < 3) return;
-                int income = (int) Math.floor(Double.parseDouble(income_str.substring(1, income_str.length() - 1)));
+                int income = (int) Math.floor(Double.parseDouble(income_str.substring(0, income_str.length() - 1)));
                 context.write(new IntWritable(income), new IntWritable(1));
             }
         }
